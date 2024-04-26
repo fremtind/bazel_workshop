@@ -1,0 +1,12 @@
+genrule(
+    name = "hello",
+    outs = ["hello.txt"],
+    cmd = "echo 'Hello, World!' > $@",
+)
+
+genrule(
+    name = "hello_replaced",
+    srcs = [":hello"],
+    outs = ["replaced.txt"],
+    cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@",
+)
