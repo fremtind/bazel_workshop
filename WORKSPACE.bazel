@@ -18,3 +18,11 @@ contrib_rules_jvm_deps()
 load("@contrib_rules_jvm//:setup.bzl", "contrib_rules_jvm_setup")
 
 contrib_rules_jvm_setup()
+
+http_archive(
+    name = "rules_spring",
+    sha256 = "87b337f95f9c09a2e5875f0bca533b050c9ccb8b0d2c92915e290520b79d0912",
+    urls = [
+        "https://github.com/salesforce/rules_spring/releases/download/2.3.2/rules-spring-2.3.2.zip",
+    ],
+)

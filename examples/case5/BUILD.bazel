@@ -1,0 +1,44 @@
+load("@rules_spring//springboot:springboot.bzl", "springboot")
+load("@contrib_rules_jvm//java:defs.bzl", "java_test_suite", "junit5_deps")
+
+java_library(
+    name = "app_libs",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(["src/main/resources/**"]),
+    deps = [
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
+        "@rules_spring//springboot/import_bundles:springboot_required_deps",
+    ],
+)
+
+springboot(
+    name = "app",
+    boot_app_class = "com.example.Main",
+    boot_launcher_class = "org.springframework.boot.loader.launch.JarLauncher",
+    dupeclassescheck_enable = True,
+    java_library = ":app_libs",
+    tags = ["app"],
+)
+
+java_test_suite(
+    name = "junit5-tests",
+    size = "small",
+    srcs = glob(["src/test/**/*.java"]),
+    jvm_flags = [
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+    ],
+    package_prefixes = [".com."],
+    resources = glob(["src/test/resources/**/*"]),
+    runner = "junit5",
+    test_suffixes = [
+        "Test.java",
+    ],
+    deps = junit5_deps() + [
+        ":app_libs",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_springframework_boot_spring_boot_starter_test",
+        "@maven//:org_springframework_boot_spring_boot_test",
+        "@maven//:org_springframework_boot_spring_boot_test_autoconfigure",
+        "@maven//:org_springframework_spring_test",
+    ],
+)

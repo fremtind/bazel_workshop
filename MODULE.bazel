@@ -7,6 +7,8 @@ JUNIT_PLATFORM_VERSION = "1.10.2"
 
 JUNIT_VERSION = "5.10.2"
 
+SPRING_BOOT_VERSION = "3.2.4"
+
 maven.install(
     artifacts = [
         "org.junit.platform:junit-platform-launcher:%s" % JUNIT_PLATFORM_VERSION,
@@ -14,6 +16,14 @@ maven.install(
         "org.junit.jupiter:junit-jupiter-api:%s" % JUNIT_VERSION,
         "org.junit.jupiter:junit-jupiter:%s" % JUNIT_VERSION,
         "org.assertj:assertj-core:3.25.3",
+        "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-loader:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-actuator:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-actuator-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-test:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
     ],
     #    lock_file = "//:maven_install.json",
     lock_file = "//:maven_install.json",
