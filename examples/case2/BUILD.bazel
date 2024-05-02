@@ -1,0 +1,12 @@
+genrule(
+    name = "hello",
+    outs = ["hello.txt"],
+    cmd = "echo 'Hello, Workshop!' > $@",
+)
+
+sh_binary(
+    name = "hello_sh",
+    srcs = ["cat.sh"],
+    args = ["$(location :hello)"],
+    data = [":hello"],
+)
