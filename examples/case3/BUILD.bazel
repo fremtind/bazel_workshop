@@ -1,0 +1,12 @@
+java_library(
+    name = "greeter-lib",
+    srcs = ["Greeter.java"],
+    visibility = ["//visibility:public"],
+)
+
+java_binary(
+    name = "hello",
+    srcs = ["HelloWorld.java"],
+    main_class = "examples.case3.HelloWorld",
+    deps = [":greeter-lib"],
+)

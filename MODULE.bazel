@@ -1,1 +1,27 @@
 bazel_dep(name = "aspect_bazel_lib", version = "2.7.1")
+bazel_dep(name = "rules_jvm_external", version = "6.1")
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+JUNIT_PLATFORM_VERSION = "1.10.2"
+
+JUNIT_VERSION = "5.10.2"
+
+maven.install(
+    artifacts = [
+        "org.junit.platform:junit-platform-launcher:%s" % JUNIT_PLATFORM_VERSION,
+        "org.junit.platform:junit-platform-reporting:%s" % JUNIT_PLATFORM_VERSION,
+        "org.junit.jupiter:junit-jupiter-api:%s" % JUNIT_VERSION,
+        "org.junit.jupiter:junit-jupiter:%s" % JUNIT_VERSION,
+        "org.assertj:assertj-core:3.25.3",
+    ],
+    #    lock_file = "//:maven_install.json",
+    lock_file = "//:maven_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+)
+use_repo(
+    maven,
+    "maven",
+)

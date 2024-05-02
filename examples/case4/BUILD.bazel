@@ -1,0 +1,14 @@
+load("@contrib_rules_jvm//java:defs.bzl", "java_junit5_test", "junit5_deps")
+
+java_junit5_test(
+    name = "greeter-test",
+    srcs = ["GreeterTest.java"],
+    test_class = "examples.case4.GreeterTest",
+    deps = [
+        "//examples/case3:greeter-lib",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_junit_jupiter_junit_jupiter_params",
+    ] + junit5_deps(),
+)
