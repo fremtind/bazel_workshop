@@ -1,1 +1,55 @@
-# image
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+
+pkg_files(
+    name = "pkg_app",
+    srcs = [
+        "//examples/case5:app.jar",
+    ],
+    prefix = "/",
+    strip_prefix = strip_prefix.from_pkg(),
+    tags = ["manual"],
+)
+
+pkg_tar(
+    name = "tar",
+    srcs = [
+        ":pkg_app",
+    ],
+    include_runfiles = True,
+    strip_prefix = ".",
+    tags = [
+        "manual",
+        "no-cache",
+    ],
+)
+
+oci_image(
+    name = "app_image",
+    base = "@openjdk_17",
+    entrypoint = [
+        "java",
+        "-jar",
+        "/app.jar",
+        "server",
+    ],
+    tars = [":tar"],
+)
+
+repo_tags = [
+    "case6:latest",
+]
+
+# Run a local container with:
+# $ bazel run :tarball
+# $ docker run --rm bazel/example:latest
+oci_tarball(
+    name = "tarball",
+    image = ":app_image",
+    repo_tags = repo_tags,
+    tags = [
+        "manual",
+        "no-cache",
+    ],
+)
