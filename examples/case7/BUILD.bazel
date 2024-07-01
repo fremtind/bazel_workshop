@@ -18,6 +18,7 @@ vite_build(
     ],
     config = "vite.config.mjs",
     out_dir = "build/client",
+    tags = ["app"],
 )
 
 vite_dev_server(

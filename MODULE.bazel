@@ -1,31 +1,30 @@
-bazel_dep(name = "aspect_bazel_lib", version = "2.7.1")
+bazel_dep(name = "aspect_bazel_lib", version = "2.7.7")
+bazel_dep(name = "protobuf", version = "27.2")
+bazel_dep(name = "contrib_rules_jvm", version = "0.27.0")
 bazel_dep(name = "rules_jvm_external", version = "6.1")
-
-maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+bazel_dep(name = "rules_pkg", version = "0.10.1")
+bazel_dep(name = "rules_oci", version = "1.7.6")
+bazel_dep(name = "aspect_rules_js", version = "2.0.0-rc5")
+bazel_dep(name = "rules_nodejs", version = "6.2.0")
 
 JUNIT_PLATFORM_VERSION = "1.10.2"
 
-JUNIT_VERSION = "5.10.2"
+SPRING_BOOT_VERSION = "3.3.1"
 
-SPRING_BOOT_VERSION = "3.2.4"
-
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
     artifacts = [
         "org.junit.platform:junit-platform-launcher:%s" % JUNIT_PLATFORM_VERSION,
         "org.junit.platform:junit-platform-reporting:%s" % JUNIT_PLATFORM_VERSION,
-        "org.junit.jupiter:junit-jupiter-api:%s" % JUNIT_VERSION,
-        "org.junit.jupiter:junit-jupiter:%s" % JUNIT_VERSION,
-        "org.assertj:assertj-core:3.25.3",
-        "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.boot:spring-boot:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.boot:spring-boot-loader:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.boot:spring-boot-actuator:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.boot:spring-boot-actuator-autoconfigure:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.boot:spring-boot-starter-test:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-test-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-test:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-loader:%s" % SPRING_BOOT_VERSION,
     ],
-    lock_file = "//:maven_install.json",
+    fetch_sources = True,
+    lock_file = "@//:maven_install.json",
     repositories = [
         "https://repo1.maven.org/maven2",
     ],
@@ -33,10 +32,9 @@ maven.install(
 use_repo(
     maven,
     "maven",
+    "unpinned_maven",
 )
 
-bazel_dep(name = "rules_pkg", version = "0.10.1")
-bazel_dep(name = "rules_oci", version = "1.7.5")
 # For testing, we also recommend https://registry.bazel.build/modules/container_structure_test
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
@@ -44,29 +42,19 @@ oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 # Declare external images you need to pull, for example:
 oci.pull(
     name = "openjdk_17",
+    digest = "sha256:af9de795d1f8d3b6172f6c55ca9ba1c5768baa11bb2dc8af7045c7db9d4c33ac",
     image = "openjdk:17",
     platforms = [
         "linux/amd64",
         "linux/arm64/v8",
     ],
-    # 'latest' is not reproducible, but it's convenient.
-    # During the build we print a WARNING message that includes recommended 'digest' and 'platforms'
-    # values which you can use here in place of 'tag' to pin for reproducibility.
-    tag = "latest",
 )
 
 # For each oci.pull call, repeat the "name" here to expose them as dependencies.
 use_repo(oci, "openjdk_17")
 
-bazel_dep(name = "aspect_rules_js", version = "1.41.2")
-
-####### Node.js version #########
-# By default you get the node version from DEFAULT_NODE_VERSION in @rules_nodejs//nodejs:repositories.bzl
-# Optionally you can pin a different node version:
-bazel_dep(name = "rules_nodejs", version = "5.8.2")
-
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain(node_version = "18.3.0")
+node.toolchain(node_version = "20.14.0")
 #################################
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
