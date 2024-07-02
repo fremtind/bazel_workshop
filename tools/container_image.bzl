@@ -37,7 +37,7 @@ def stamped_container_image(name, base_image, image_layers, cmd = None, entrypoi
 
     # Run a local container with:
     # $ bazel run :tarball
-    # $ docker run --rm bazel/example:latest
+    # $ docker run --rm bazel/example:dev
     oci_tarball(
         name = "tarball",
         image = ":app_image",
