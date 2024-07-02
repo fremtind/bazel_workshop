@@ -1,0 +1,111 @@
+load("@npm//teams/team-2/remix-app:@remix-run/dev/package_json.bzl", remix_dev = "bin")
+load("@npm//teams/team-2/remix-app:@remix-run/serve/package_json.bzl", remix_serve = "bin")
+load("@aspect_rules_js//js:defs.bzl", "js_image_layer", "js_run_devserver")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:container_image.bzl", "stamped_container_image")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_filegroup", "pkg_files", "strip_prefix")
+
+remix_dev.remix_binary(name = "remix_bin")
+
+remix_serve.remix_serve_binary(name = "remix_serve_bin")
+
+npm_link_all_packages()
+
+DEPS = [
+    ":node_modules/react",
+    ":node_modules/react-dom",
+    ":node_modules/@remix-run/serve",
+    ":node_modules/@remix-run/node",
+    ":node_modules/@remix-run/react",
+    ":node_modules/isbot",
+    "//teams/team-2/remix-app/app",
+]
+
+DEV_DEPS = [
+    ":node_modules/@remix-run/dev",
+    ":node_modules/tailwindcss",
+    ":node_modules/autoprefixer",
+    ":node_modules/postcss",
+    ":node_modules/vite",
+    ":node_modules/vite-tsconfig-paths",
+    "package.json",
+    "vite.config.ts",
+    "tsconfig.json",
+    "postcss.config.js",
+    "tailwind.config.ts",
+]
+
+remix_dev.remix(
+    name = "app",
+    srcs = glob([
+        "public/**",
+    ]) + DEV_DEPS + DEPS,
+    args = ["vite:build"],
+    chdir = package_name(),
+    out_dirs = [
+        "build",
+    ],
+    tags = [
+        "app",
+    ],
+)
+
+js_run_devserver(
+    name = "dev",
+    args = [
+        "vite:dev --manual",
+    ],
+    chdir = package_name(),
+    command = "./node_modules/.bin/remix",
+    data = glob([
+        "public/**",
+    ]) + DEPS + DEV_DEPS,
+)
+
+remix_serve.remix_serve_binary(
+    name = "start",
+    args = [
+        "build/server/index.js",
+    ],
+    chdir = package_name(),
+    data = DEPS + [
+        ":app",
+        ":package.json",
+    ],
+)
+
+platform(
+    name = "linux_amd64",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+js_image_layer(
+    name = "app_layer",
+    binary = ":start",
+    platform = ":linux_amd64",
+    root = "/app",
+)
+
+target_name = "start"
+
+path_to_start = "/app/" + package_name() + "/" + target_name
+
+path_to_package_root = path_to_start + ".runfiles/__main__/" + package_name()
+
+stamped_container_image(
+    name = "remix-app",
+    base_image = "@alpine_3",
+    # js_image_layer root + package + / + name of binary
+    cmd = [
+        path_to_start,
+        "{}/build/server/index.js".format(path_to_package_root),
+    ],
+    entrypoint = ["bash"],
+    image_layers = [
+        ":app_layer",
+    ],
+    workdir = "/app",
+)
