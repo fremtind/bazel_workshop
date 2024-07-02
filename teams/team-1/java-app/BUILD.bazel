@@ -1,0 +1,23 @@
+load("//tools:generic_spring_boot_app.bzl", "generic_spring_boot_app")
+
+generic_spring_boot_app(
+    name = "app",
+    srcs = glob(["src/main/java/**/*.java"]),
+    package = "com.example.java",
+    resources = glob(["src/main/resources/**/*"]),
+    test_deps = [
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_springframework_boot_spring_boot_starter_test",
+        "@maven//:org_springframework_boot_spring_boot_test",
+        "@maven//:org_springframework_boot_spring_boot_test_autoconfigure",
+        "@maven//:org_springframework_spring_test",
+    ],
+    test_resources = glob(["src/test/resources/**/*"]),
+    test_srcs = glob(["src/test/java/**/*.java"]),
+    deps = [
+        "@maven//:org_springframework_boot_spring_boot",
+        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+        "@maven//:org_springframework_boot_spring_boot_loader",
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
+    ],
+)
