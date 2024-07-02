@@ -1,8 +1,19 @@
 load("//tools:generic_spring_boot_app.bzl", "generic_spring_boot_app")
 
+java_library(
+    name = "app_lib",
+    srcs = glob(["src/main/java/**/*.java"]),
+    deps = [
+        "@maven//:org_springframework_boot_spring_boot",
+        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+        "@maven//:org_springframework_boot_spring_boot_loader",
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
+    ],
+)
+
 generic_spring_boot_app(
     name = "app",
-    srcs = glob(["src/main/java/**/*.java"]),
+    java_library = ":app_lib",
     package = "com.example.java",
     resources = glob(["src/main/resources/**/*"]),
     test_deps = [
@@ -13,10 +24,4 @@ generic_spring_boot_app(
         "@maven//:org_springframework_spring_test",
     ],
     test_srcs = glob(["src/test/java/**/*.java"]),
-    deps = [
-        "@maven//:org_springframework_boot_spring_boot",
-        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
-        "@maven//:org_springframework_boot_spring_boot_loader",
-        "@maven//:org_springframework_boot_spring_boot_starter_web",
-    ],
 )

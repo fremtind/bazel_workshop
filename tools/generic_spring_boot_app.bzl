@@ -6,40 +6,56 @@ load("//tools:stamp_tags.bzl", "stamp_tags")
 load("//tools:container_image.bzl", "stamped_container_image")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@contrib_rules_jvm//java:defs.bzl", "java_test_suite", "junit5_deps")
+load("//tools:kotlin_test_suite.bzl", "kotlin_test_suite")
 
-def generic_spring_boot_app(name, package, srcs, test_srcs, deps = [], test_deps = [], resources = None, test_resources = None, dupeclass_ignore = None, spring_profiles_active = ["dev"]):
-    java_library_name = "{}_app_libs".format(name)
-    native.java_library(
-        name = java_library_name,
-        srcs = srcs,
-        resources = resources,
-        deps = deps,
-        visibility = ["//visibility:public"],
-    )
-
+def generic_spring_boot_app(name, package, java_library, test_srcs, test_deps = [], resources = None, test_resources = None, dupeclass_ignore = None, spring_profiles_active = ["dev"]):
     spring_boot_app(
         name = name,
-        java_library = ":{}".format(java_library_name),
+        java_library = java_library,
         package = package,
         dupeclass_ignore = dupeclass_ignore,
         spring_profiles_active = spring_profiles_active,
     )
 
-    java_test_suite(
-        name = "junit5-tests",
-        srcs = test_srcs,
-        test_suffixes = ["Test.java", "IT.java"],
-        package_prefixes = [".com."],
-        resources = test_srcs,
-        runner = "junit5",
-        deps = junit5_deps() + [
-            ":{}".format(java_library_name),
-        ] + test_deps,
-        jvm_flags = [
-            "--add-opens=java.base/java.lang=ALL-UNNAMED",
-        ],
-        size = "small",
-    )
+    java_test_srcs = []
+    kotlin_test_srcs = []
+    if (test_srcs):
+        java_test_srcs = [src for src in test_srcs if src.endswith(".java")]
+        kotlin_test_srcs = [src for src in test_srcs if src.endswith(".kt")]
+
+    print("java_test_srcs: ", java_test_srcs)
+    print("kotlin_test_srcs: ", kotlin_test_srcs)
+    if (java_test_srcs):
+        java_test_suite(
+            name = "java-junit5-tests",
+            srcs = java_test_srcs,
+            test_suffixes = ["Test.java", "IT.java"],
+            package_prefixes = [".com."],
+            resources = test_resources,
+            runner = "junit5",
+            deps = junit5_deps() + [
+                java_library,
+            ] + test_deps,
+            jvm_flags = [
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            ],
+            size = "small",
+        )
+
+    if (kotlin_test_srcs):
+        kotlin_test_suite(
+            name = "kotlin-junit5-tests",
+            srcs = kotlin_test_srcs,
+            test_suffixes = ["Test.kt", "IT.kt"],
+            package_prefixes = [".com."],
+            resources = test_resources,
+            deps = junit5_deps() + [
+                java_library,
+            ] + test_deps,
+            jvm_flags = [
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            ],
+        )
 
     stamp_tags(
         name = "stamp_substitutions",

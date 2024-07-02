@@ -1,3 +1,18 @@
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
 npm_link_all_packages(name = "node_modules")
+
+load("@rules_kotlin//kotlin:core.bzl", "define_kt_toolchain", "kt_kotlinc_options")
+
+kt_kotlinc_options(
+    name = "kotlin_compiler_options",
+    warn = "error",
+)
+
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = "1.9",
+    jvm_target = "21",
+    kotlinc_options = ":kotlin_compiler_options",
+    language_version = "1.9",
+)

@@ -1,0 +1,36 @@
+load("//tools:generic_spring_boot_app.bzl", "generic_spring_boot_app")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+kt_jvm_library(
+    name = "app_lib",
+    srcs = glob([
+        "src/main/kotlin/**/*.kt",
+        "src/main/java/**/*.java",
+    ]),
+    resources = glob(["src/main/resources/**/*"]),
+    deps = [
+        "@maven//:org_springframework_boot_spring_boot",
+        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+        "@maven//:org_springframework_boot_spring_boot_loader",
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
+    ],
+)
+
+generic_spring_boot_app(
+    name = "app",
+    java_library = ":app_lib",
+    package = "com.example.java",
+    resources = glob(["src/main/resources/**/*"]),
+    test_deps = [
+        "@maven//:org_assertj_assertj_core",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+        "@maven//:org_springframework_boot_spring_boot_starter_test",
+        "@maven//:org_springframework_boot_spring_boot_test",
+        "@maven//:org_springframework_boot_spring_boot_test_autoconfigure",
+        "@maven//:org_springframework_spring_test",
+    ],
+    test_srcs = glob([
+        "src/test/kotlin/**/*.kt",
+        "src/test/java/**/*.java",
+    ]),
+)

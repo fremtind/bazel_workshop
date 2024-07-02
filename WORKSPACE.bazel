@@ -7,3 +7,5 @@ http_archive(
         "https://github.com/salesforce/rules_spring/releases/download/2.3.2/rules-spring-2.3.2.zip",
     ],
 )
+
+register_toolchains("//:kotlin_toolchain")
