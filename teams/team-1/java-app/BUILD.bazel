@@ -12,7 +12,6 @@ generic_spring_boot_app(
         "@maven//:org_springframework_boot_spring_boot_test_autoconfigure",
         "@maven//:org_springframework_spring_test",
     ],
-    test_resources = glob(["src/test/resources/**/*"]),
     test_srcs = glob(["src/test/java/**/*.java"]),
     deps = [
         "@maven//:org_springframework_boot_spring_boot",
