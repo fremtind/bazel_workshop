@@ -1,3 +1,4 @@
 node_modules
 examples/case7/node_modules
 teams/team-2/remix-app/node_modules
+teams/team-2/vite-app/node_modules
