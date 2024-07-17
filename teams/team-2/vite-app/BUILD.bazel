@@ -17,6 +17,7 @@ DEPS = [
     ":node_modules/@vitejs/plugin-react-swc",
     ":node_modules/react",
     ":node_modules/react-dom",
+    ":node_modules/greeting-component",
 ]
 
 DEV_DEPS = [
@@ -63,7 +64,6 @@ typescript_bin.tsc_test(
             "src/**/*.tsx",
             "src/**/*.ts",
         ],
-        allow_empty = True,
     ) + [
         "package.json",
         "tsconfig.app.json",

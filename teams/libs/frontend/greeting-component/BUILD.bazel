@@ -1,0 +1,50 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_ts//ts:defs.bzl", "TsConfigInfo", "ts_config", "ts_project")
+
+npm_link_all_packages()
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+)
+
+ts_project(
+    name = "src_ts",
+    srcs = ["src/greeting.tsx"],
+    composite = False,
+    declaration = True,
+    resolve_json_module = True,
+    source_map = True,
+    supports_workers = 0,
+    transpiler = "tsc",
+    tsconfig = ":tsconfig",
+    validate = True,
+    deps = [
+        ":node_modules",
+    ],
+)
+
+js_library(
+    name = "js_src",
+    srcs = [
+        "package.json",
+    ],
+    deps = [
+        ":src_ts",
+    ],
+)
+
+npm_package(
+    name = "pkg",
+    srcs = [
+        ":js_src",
+    ],
+    package = "greeting-component",
+    root_paths = [
+        package_name(),  # reference to output path for this package, see https://github.com/aspect-build/rules_js/blob/main/docs/npm_package.md#npm_package-root_paths
+    ],
+    tags = ["lib"],
+    visibility = ["//visibility:public"],
+)

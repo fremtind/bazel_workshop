@@ -1,0 +1,12 @@
+{
+	"name": "greeting-component",
+	"version": "1.0.0",
+	"files": ["src/greeting.tsx"],
+	"dependencies": {
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@types/react": "^18.3.3"
+	}
+}

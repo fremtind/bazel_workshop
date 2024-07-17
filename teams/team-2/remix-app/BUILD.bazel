@@ -18,6 +18,7 @@ DEPS = [
     ":node_modules/@remix-run/node",
     ":node_modules/@remix-run/react",
     ":node_modules/isbot",
+    ":node_modules/greeting-component",
     "//teams/team-2/remix-app/app",
 ]
 

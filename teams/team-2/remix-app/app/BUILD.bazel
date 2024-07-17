@@ -12,5 +12,6 @@ js_library(
     srcs = glob(SRC_PATTERNS),
     deps = [
         "//teams/team-2/remix-app:node_modules/@remix-run/react",
+        "//teams/team-2/remix-app:node_modules/greeting-component",
     ],
 )
