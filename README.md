@@ -34,6 +34,21 @@ It also contains a CI workflow that shows how to build and test all changed targ
  - Case 4: Docker in Bazel
  - Case 5: Vite + React frontend in Bazel
 
+### Remote caching
+This workshop works with a free online remote cache to speed up builds, called [NativeLink](https://app.nativelink.com/).
+Register for a free account, and the configuration from the service to `.aspect/bazelrc/user.bazelrc` which will not be checked in to the repository.
+
+Example:
+```
+build --remote_cache=grpcs://cas-<github-user>.build-faster.nativelink.net
+build --remote_header=x-nativelink-api-key=<api-key>
+build --bes_backend=grpcs://bes-<github-user>.build-faster.nativelink.net
+build --bes_header=x-nativelink-api-key=<api-key>
+build --remote_timeout=600
+```
+
+This is in use by the CI workflow for this repository as well, and will speed up your builds significantly.
+
 ### Examples
 - [Case 1: Hello World in Bazel](examples/case1/README.md)
 - [Case 2: Shell scripts](examples/case2/README.md)
