@@ -4,3 +4,4 @@ bazel-bin
 bazel-out
 bazel-testlogs
 node_modules
+MODULE.bazel.lock
