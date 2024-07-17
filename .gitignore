@@ -5,3 +5,4 @@ bazel-out
 bazel-testlogs
 node_modules
 MODULE.bazel.lock
+.aspect/bazelrc/user.bazelrc
