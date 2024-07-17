@@ -4,14 +4,162 @@ on:
     branches:
       - '**'
 
+env:
+  TMP_WORKDIR: '${{ github.workspace }}/target'
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      changed_containers_teams: ${{ steps.changed_targets.outputs.changed_containers_teams }}
+      changed_containers_matrix: ${{ steps.changed_targets.outputs.changed_containers_matrix }}
+      changed_libs_matrix: ${{ steps.changed_targets.outputs.changed_libs_matrix }}
+      build_changed_containers: ${{ steps.changed_targets.outputs.changed_containers }}
+      build_changed_libs: ${{ steps.changed_targets.outputs.changed_libs }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: "Build"
-        run: bazel build //...
+      - name: Bazel setup
+        uses: ./.github/actions/bazel-setup
+        with:
+          restore-cache-only: false
 
-      - name: "Run tests"
-        run: bazel test //...
+      - name: Get changed app targets
+        uses: ./.github/actions/bazel-changed-targets
+        id: changed_targets
+        with:
+          main_compare_commit: "HEAD"
+          tmp_workdir: ${{ env.TMP_WORKDIR }}
+
+      - name: Build all changed targets
+        run: |
+          echo '${{ steps.changed_targets.outputs.changed_targets }}' | xargs bazel build \
+          --build_tag_filters=-container,-manual,-resource_intensive
+
+      - name: Find tests to execute
+        if: ${{ steps.changed_targets.outputs.changed_test_targets != '' }}
+        id: find_tests
+        env:
+          TEST_TARGETS: "${{ steps.changed_targets.outputs.changed_test_targets }}"
+        run: |
+          query_file="${{ env.TMP_WORKDIR }}/test_targets_query.txt"
+          echo "set(${{ env.TEST_TARGETS }}) except attr('tags', resource_intensive, set(${{ env.TEST_TARGETS }}))" > "$query_file"
+          {
+            echo 'test_targets<<EOF'
+            bazel query --query_file=$query_file
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Test
+        if: ${{ steps.find_tests.outputs.test_targets != '' }}
+        run: |
+          echo '${{ steps.find_tests.outputs.test_targets }}' | xargs bazel test \
+            --build_tests_only \
+            --test_tag_filters=-resource_intensive
+
+  publish:
+    name: "🚀 ${{ matrix.container.team_shortname }} - ${{ matrix.container.name }}"
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ needs.build.outputs.build_changed_containers == 'true' }}
+    concurrency:
+      group: branch-publish-app-${{ github.ref_name }}-${{ matrix.container.package }}
+      cancel-in-progress: true
+    strategy:
+      matrix: ${{ fromJson(needs.build.outputs.changed_containers_matrix) }}
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bazel setup
+        uses: ./.github/actions/bazel-setup
+        with:
+          restore-cache-only: true
+
+      - name: App info
+        id: app-info
+        run: |
+          echo "release_version=$(./scripts/get_release_version)" >> $GITHUB_OUTPUT
+
+      - name: Bazel target helper
+        id: target-helper
+        uses: ./.github/actions/bazel-target-helper
+        with:
+          package: '//${{ matrix.container.package }}'
+
+      - name: Build app
+        run: |
+          bazel build \
+            --config=release \
+            "$(bazel query 'kind(oci_image, //${{ matrix.container.package }}/...)')"
+
+      - name: Test
+        if: ${{ steps.target-helper.outputs.has_tests == 'true' }}
+        run: |
+          bazel coverage \
+            --build_tests_only \
+            --combined_report=lcov \
+            --instrument_test_targets \
+            //${{ matrix.container.package }}/...
+
+      - name: Docker
+        id: docker
+        env:
+          APP_NAME: ${{ matrix.container.name }}
+          OLD_TAG: '${{ steps.app-info.outputs.release_version }}'
+        run: |
+          bazel run \
+            --config=release \
+            "$(bazel query 'kind(oci_tarball, //${{ matrix.container.package }}/...)')"
+
+          SANITIZED_REF_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9_-]/_/g' | sed 's/^-//g' | sed 's/-$//g')
+          NEW_TAG="${SANITIZED_REF_NAME:0:30}-${{ github.sha }}"
+
+          docker tag "${{ env.APP_NAME }}:${{ env.OLD_TAG }}" "${{ env.APP_NAME }}:$NEW_TAG"
+          echo "tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+  lib:
+    name: "📦 ${{ matrix.lib.team_shortname }} - ${{ matrix.lib.name }}"
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ needs.build.outputs.build_changed_libs == 'true' }}
+    concurrency:
+      group: bazel-partial-test-app-${{ github.ref_name }}-${{ matrix.lib.package }}
+      cancel-in-progress: true
+    strategy:
+      matrix: ${{ fromJson(needs.build.outputs.changed_libs_matrix) }}
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bazel setup
+        uses: ./.github/actions/bazel-setup
+        with:
+          restore-cache-only: true
+
+      - name: Bazel target helper
+        id: target_helper
+        uses: ./.github/actions/bazel-target-helper
+        with:
+          package: '//${{ matrix.lib.package }}'
+
+      - name: Build
+        run: |
+          bazel build \
+            --build_tag_filters=-manual \
+            //${{ matrix.lib.package }}/...
+
+      - name: Test
+        if: ${{ steps.target_helper.outputs.has_tests == 'true' }}
+        run: |
+          bazel coverage \
+            --build_tests_only \
+            --combined_report=lcov \
+            --instrument_test_targets \
+            //${{ matrix.lib.package }}/...

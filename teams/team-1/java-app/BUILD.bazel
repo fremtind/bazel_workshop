@@ -12,7 +12,7 @@ java_library(
 )
 
 generic_spring_boot_app(
-    name = "app",
+    name = "java-app",
     java_library = ":app_lib",
     package = "com.example.java",
     resources = glob(["src/main/resources/**/*"]),

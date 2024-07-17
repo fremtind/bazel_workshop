@@ -1,0 +1,70 @@
+name: "Bazel setup"
+description: "Sets up necessary steps for Bazel"
+
+inputs:
+  restore-cache-only:
+    description: "Restore cache only"
+    required: false
+    default: 'false'
+
+outputs:
+  disk_cache:
+    description: "Path to disk cache"
+    value: "${{ steps.cache_paths.outputs.disk_cache }}"
+  repo_cache:
+    description: "Path to repo cache"
+    value: "${{ steps.cache_paths.outputs.repo_cache }}"
+
+runs:
+  using: composite
+  steps:
+    - name: Cache paths
+      id: cache_paths
+      shell: bash
+      run: |
+        echo "disk_cache=$HOME/.cache/bazel-disk" >> $GITHUB_OUTPUT
+        echo "repo_cache=$HOME/.cache/bazel-repo" >> $GITHUB_OUTPUT
+
+    - uses: bazel-contrib/setup-bazel@0.8.0
+      with:
+        # Avoid downloading Bazel every time.
+        bazelisk-cache: true
+        # Store build cache per workflow.
+        disk-cache: false
+        # Share repository cache between workflows.
+        repository-cache: false
+        bazelrc: |
+          import %workspace%/.aspect/bazelrc/ci.bazelrc
+          common --verbose_failures
+          build --show_progress_rate_limit=0.2
+          build --curses=no
+          build --repository_cache=${{ steps.cache_paths.outputs.repo_cache }}
+          build --disk_cache=${{ steps.cache_paths.outputs.disk_cache }}
+
+    - name: Cache Bazel Repository
+      if: ${{ inputs.restore-cache-only == 'true' }}
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.cache_paths.outputs.repo_cache }}
+        key: ${{ runner.os }}-repo-cache-${{ hashFiles('WORKSPACE.bazel', 'MODULE.bazel', 'pnpm-lock.yaml', '.bazelversion') }}
+
+    - name: Cache Bazel Repository
+      if: ${{ inputs.restore-cache-only != 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.cache_paths.outputs.repo_cache }}
+        key: ${{ runner.os }}-repo-cache-${{ hashFiles('WORKSPACE.bazel', 'MODULE.bazel', 'pnpm-lock.yaml', '.bazelversion') }}
+
+    - name: Cache Bazel Disk Cache
+      if: ${{ inputs.restore-cache-only == 'true' }}
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.cache_paths.outputs.disk_cache }}
+        key: ${{ runner.os }}-disk-cache
+
+    - name: Cache Bazel Disk Cache
+      if: ${{ inputs.restore-cache-only != 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.cache_paths.outputs.disk_cache }}
+        key: ${{ runner.os }}-disk-cache

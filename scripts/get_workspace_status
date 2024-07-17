@@ -1,0 +1,11 @@
+#!/bin/bash
+
+BASEDIR=$(dirname "$0")
+echo "$BASEDIR"
+
+# app.version
+app_version=$($BASEDIR/get_release_version)
+if [[ $? == 0 ]];
+then
+  echo "STABLE_app.version $app_version"
+fi

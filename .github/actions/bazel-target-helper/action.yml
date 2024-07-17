@@ -1,0 +1,25 @@
+name: "Bazel target helper"
+description: "Takes a Bazel target and gives helpful information about it"
+
+inputs:
+  package:
+    description: "Bazel package to get information about"
+    required: true
+
+outputs:
+  has_tests:
+    description: "true/false whether target has any tests"
+    value: "${{ steps.data.outputs.num_tests != '0' }}"
+
+runs:
+  using: composite
+  steps:
+    - name: Read bazel target flags
+      shell: bash
+      id: data
+      run: |
+        TEST_TARGETS="$(bazel query 'kind(".*_test", ${{ inputs.package }}/...)' || echo "")"
+        echo "ALL TEST TARGETS: $TEST_TARGETS"
+        NUM_TESTS="$(echo "$TEST_TARGETS" | { grep -vc '^$' || test $? = 1; })"
+        echo "NUM_TESTS='$NUM_TESTS'"
+        echo "num_tests=$NUM_TESTS" >> $GITHUB_OUTPUT

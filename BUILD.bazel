@@ -1,8 +1,14 @@
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_java//java:defs.bzl", "java_binary")
+load("@rules_kotlin//kotlin:core.bzl", "define_kt_toolchain", "kt_kotlinc_options")
 
 npm_link_all_packages(name = "node_modules")
 
-load("@rules_kotlin//kotlin:core.bzl", "define_kt_toolchain", "kt_kotlinc_options")
+java_binary(
+    name = "bazel-diff",
+    main_class = "com.bazel_diff.Main",
+    runtime_deps = ["@bazel_diff//jar"],
+)
 
 kt_kotlinc_options(
     name = "kotlin_compiler_options",
