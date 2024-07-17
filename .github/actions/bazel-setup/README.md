@@ -2,6 +2,8 @@
 
 Action to make it easy to set up Bazel the same between workflows.
 
-Automatically sets up disk-cache and repository-cache to speed up builds.
+Automatically sets up remote caching through [NativeLink](https://app.nativelink.com/).
+This is a free service that speeds up your builds by caching build artifacts.
 
-For a production setup, you should consider setting up a [remote cache service](https://bazel.build/remote/caching).
+For production use, you should consider which service to use for yourself.
+We do not use NativeLink at Fremtind, and this is not an endorsement of the service.
