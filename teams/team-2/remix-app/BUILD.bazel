@@ -103,6 +103,9 @@ js_image_layer(
         "@platforms//cpu:x86_64": ":linux_amd64",
     }),
     root = "/app",
+    tags = [
+        "manual",
+    ],
 )
 
 target_name = "start"
