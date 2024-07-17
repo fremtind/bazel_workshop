@@ -24,7 +24,7 @@ jobs:
       - name: Bazel setup
         uses: ./.github/actions/bazel-setup
         with:
-          restore-cache-only: false
+          nativelink-api-key: ${{ secrets.NATIVELINK_API_KEY }}
 
       - name: Get changed app targets
         uses: ./.github/actions/bazel-changed-targets
@@ -34,6 +34,7 @@ jobs:
           tmp_workdir: ${{ env.TMP_WORKDIR }}
 
       - name: Build all changed targets
+        if: ${{ steps.changed_targets.outputs.changed_targets != '' }}
         run: |
           echo '${{ steps.changed_targets.outputs.changed_targets }}' | xargs bazel build \
           --build_tag_filters=-container,-manual,-resource_intensive
@@ -79,7 +80,7 @@ jobs:
       - name: Bazel setup
         uses: ./.github/actions/bazel-setup
         with:
-          restore-cache-only: true
+          nativelink-api-key: ${{ secrets.NATIVELINK_API_KEY }}
 
       - name: App info
         id: app-info
@@ -141,7 +142,7 @@ jobs:
       - name: Bazel setup
         uses: ./.github/actions/bazel-setup
         with:
-          restore-cache-only: true
+          nativelink-api-key: ${{ secrets.NATIVELINK_API_KEY }}
 
       - name: Bazel target helper
         id: target_helper
