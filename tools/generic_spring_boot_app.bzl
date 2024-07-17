@@ -10,7 +10,7 @@ load("//tools:kotlin_test_suite.bzl", "kotlin_test_suite")
 
 def generic_spring_boot_app(name, package, java_library, test_srcs, test_deps = [], resources = None, test_resources = None, dupeclass_ignore = None, spring_profiles_active = ["dev"]):
     spring_boot_app(
-        name = name,
+        name = "app",
         java_library = java_library,
         package = package,
         dupeclass_ignore = dupeclass_ignore,
@@ -23,8 +23,6 @@ def generic_spring_boot_app(name, package, java_library, test_srcs, test_deps = 
         java_test_srcs = [src for src in test_srcs if src.endswith(".java")]
         kotlin_test_srcs = [src for src in test_srcs if src.endswith(".kt")]
 
-    print("java_test_srcs: ", java_test_srcs)
-    print("kotlin_test_srcs: ", kotlin_test_srcs)
     if (java_test_srcs):
         java_test_suite(
             name = "java-junit5-tests",
@@ -90,7 +88,7 @@ app:
     pkg_files(
         name = "pkg_app",
         srcs = [
-            ":{}.jar".format(name),  # produced by springboot rule
+            ":app.jar",  # produced by springboot rule
         ],
         prefix = "/opt/app",
         strip_prefix = strip_prefix.from_pkg(),

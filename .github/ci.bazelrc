@@ -1,0 +1,13 @@
+import %workspace%/.aspect/bazelrc/ci.bazelrc
+
+common --verbose_failures
+common --lockfile_mode=error
+
+####
+# Overrides for CI builds
+# Default aspect progress rate limit is too high
+build --show_progress_rate_limit=0.2
+#
+# This causes too much whitespace in the CI output
+build --curses=no
+####

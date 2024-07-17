@@ -1,10 +1,18 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_jar")
 
 http_archive(
     name = "rules_spring",
     sha256 = "87b337f95f9c09a2e5875f0bca533b050c9ccb8b0d2c92915e290520b79d0912",
     urls = [
         "https://github.com/salesforce/rules_spring/releases/download/2.3.2/rules-spring-2.3.2.zip",
+    ],
+)
+
+http_jar(
+    name = "bazel_diff",
+    sha256 = "8e74d3526980f85cfd707fea4e6954bfd07063f7cce94a6a2ef129debb5a8a60",
+    urls = [
+        "https://github.com/Tinder/bazel-diff/releases/download/7.1.0/bazel-diff_deploy.jar",
     ],
 )
 

@@ -1,0 +1,125 @@
+name: "Bazel get changed targets"
+description: ""
+
+inputs:
+  main_compare_commit:
+    description: "The commit on main branch to compare with"
+    required: true
+  external_repos:
+    description: "External repos to include in the diff"
+    required: false
+    default: "maven,npm"
+  tmp_workdir:
+    description: "Directory to use for temporary files"
+    required: true
+
+outputs:
+  changed_targets:
+    description: "The list of changed targets"
+    value: ${{ steps.get-changed-targets.outputs.changed_targets }}
+  changed_test_targets:
+    description: "The list of changed testable targets"
+    value: ${{ steps.get-changed-targets.outputs.changed_test_targets }}
+  changed_containers:
+    description: "Has any apps changed? Returns true or false"
+    value: ${{ steps.get-changed-targets.outputs.changed_containers }}
+  changed_containers_matrix:
+    description: "JSON matrix for changed aps"
+    value: ${{ steps.get-changed-targets.outputs.changed_containers_matrix }}
+  changed_libs:
+    description: "Has any libs changed? Returns true or false"
+    value: ${{ steps.get-changed-targets.outputs.changed_libs }}
+  changed_libs_matrix:
+    description: "JSON matrix for changed libs"
+    value: ${{ steps.get-changed-targets.outputs.changed_libs_matrix }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set env
+      shell: bash
+      run: |
+        BAZEL_DIFF_WORKDIR=${{ inputs.tmp_workdir }}/bazel-diff
+        echo "BAZEL_DIFF_WORKDIR=$BAZEL_DIFF_WORKDIR" >> $GITHUB_ENV
+        echo "BAZEL_DIFF_IMPACTED_TARGETS=$BAZEL_DIFF_WORKDIR/impacted_targets.txt" >> $GITHUB_ENV
+
+    - name: Commits
+      id: commits
+      shell: bash
+      run: |
+        echo "previous_commit=$(git merge-base origin/main ${{ inputs.main_compare_commit }})" >> $GITHUB_OUTPUT
+        echo "current_commit=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+    - name: Bazel-diff parameters
+      id: params
+      shell: bash
+      run: |
+        bazel_diff_bin="${{ env.BAZEL_DIFF_WORKDIR }}/bazel_diff_bin"
+        mkdir -p "$(dirname "$bazel_diff_bin")"
+        bazel run :bazel-diff --script_path="$bazel_diff_bin"
+        bazel_diff_version=$($bazel_diff_bin -V)
+        seed="$(echo "$bazel_diff_version ${{ inputs.external_repos }}" | md5sum | cut -d' ' -f1)"
+        echo "seed=$seed" >> $GITHUB_OUTPUT
+        echo "bazel_diff_bin=$bazel_diff_bin" >> $GITHUB_OUTPUT
+
+    - name: Get changed app targets
+      id: get-changed-targets
+      shell: bash
+      env:
+        BAZEL_DIFF_SCRIPT: '${{ github.action_path }}/bazel-diff.sh'
+        BAZEL_DIFF_WORKDIR: ${{ env.BAZEL_DIFF_WORKDIR }}
+        BAZEL_DIFF_BIN: ${{ steps.params.outputs.bazel_diff_bin }}
+        BAZEL_DIFF_SEED: ${{ steps.params.outputs.seed }}
+        PREV_COMMIT: ${{ steps.commits.outputs.previous_commit }}
+        CURRENT_COMMIT: ${{ steps.commits.outputs.current_commit }}
+        EXTERNAL_REPOS: ${{ inputs.external_repos }}
+      run: |
+        echo "Diffing between '$PREV_COMMIT' and '$CURRENT_COMMIT'"
+        ALL_CHANGED_TARGETS=$($BAZEL_DIFF_SCRIPT "$BAZEL_DIFF_WORKDIR" "$BAZEL_DIFF_BIN" "$BAZEL_DIFF_SEED" "$PREV_COMMIT" "$CURRENT_COMMIT" "$EXTERNAL_REPOS")
+        if [ "$?" -ne 0 ]; then
+          echo "Error occured when running bazel-diff"
+          exit 1
+        fi
+
+        FILTERED_CHANGED_TARGETS="$(echo "$ALL_CHANGED_TARGETS" | ${{ github.action_path }}/filter_targets.sh)"
+        {
+            echo 'changed_targets<<EOF'
+            echo "$FILTERED_CHANGED_TARGETS"
+            echo EOF
+        } >> "$GITHUB_OUTPUT"
+        echo "tests(set($FILTERED_CHANGED_TARGETS))" > "${{ inputs.tmp_workdir }}/test_query.txt"
+        {
+            echo 'changed_test_targets<<EOF'
+            bazel query --query_file=${{ inputs.tmp_workdir }}/test_query.txt
+            echo EOF
+        } >> "$GITHUB_OUTPUT"
+
+        echo "attr('tags', container, set($(echo "$FILTERED_CHANGED_TARGETS")))" > ${{ inputs.tmp_workdir }}/changed_containers_query_file.txt
+        CHANGED_CONTAINERS=$((bazel query --query_file=${{ inputs.tmp_workdir }}/changed_containers_query_file.txt) || echo "")
+        echo "attr('tags', lib, set($(echo "$FILTERED_CHANGED_TARGETS")))" > ${{ inputs.tmp_workdir }}/changed_libs_query_file.txt
+        CHANGED_LIBS=$((bazel query --query_file=${{ inputs.tmp_workdir }}/changed_libs_query_file.txt) || echo "")
+
+        if [[ ! -z $CHANGED_CONTAINERS ]]; then
+          MATRIX_JSON=$(echo "$CHANGED_CONTAINERS" | ${{ github.action_path }}/create_matrix.js container)
+          echo "Build matrix: $MATRIX_JSON"
+          echo "changed_containers_matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+          echo "changed_containers=true" >> $GITHUB_OUTPUT
+          {
+              echo 'changed_containers_teams<<EOF'
+              echo "$CHANGED_CONTAINERS" | grep -oiE '//teams/(team-[0-9a-z_-]+)' | sort | uniq
+              echo EOF
+          } >> "$GITHUB_OUTPUT"
+        else
+          echo "changed_containers=false" >> $GITHUB_OUTPUT
+          echo "changed_containers_matrix=" >> $GITHUB_OUTPUT
+        fi
+
+        if [[ ! -z $CHANGED_LIBS ]]; then
+          LIBS_MATRIX_JSON=$(echo "$CHANGED_LIBS" | ${{ github.action_path }}/create_matrix.js lib)
+          echo "Build matrix: $LIBS_MATRIX_JSON"
+          echo "changed_libs_matrix=$LIBS_MATRIX_JSON" >> $GITHUB_OUTPUT
+          echo "changed_libs=true" >> $GITHUB_OUTPUT
+        else
+          echo "build_changed_libs=false" >> $GITHUB_OUTPUT
+          echo "changed_libs_matrix=" >> $GITHUB_OUTPUT
+        fi

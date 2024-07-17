@@ -1,0 +1,17 @@
+#!/bin/bash
+
+COMMIT=${1:-HEAD}
+
+DATE="$(git show -s --date=format-local:'%Y%m%d-%H%M' --format=%cd "$COMMIT")"
+SHORT_HASH="$(git rev-parse --short=8 "$COMMIT")"
+VERSION="$DATE-$SHORT_HASH"
+BRANCH_FROM_GITHUB="$GITHUB_REF_NAME"
+BRANCH_FROM_REPO="$(git rev-parse --abbrev-ref "$COMMIT")"
+
+BRANCH_NAME=${BRANCH_FROM_GITHUB:-$BRANCH_FROM_REPO}
+if [[ "$BRANCH_NAME" != "main" ]]
+then
+  VERSION="${VERSION}-SNAPSHOT"
+fi
+
+echo "$VERSION"
