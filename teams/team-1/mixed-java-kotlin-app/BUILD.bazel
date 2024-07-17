@@ -21,7 +21,7 @@ kt_jvm_library(
 )
 
 generic_spring_boot_app(
-    name = "app",
+    name = "mixed-java-kotlin-app",
     java_library = ":app_lib",
     package = "com.example.mixed",
     resources = glob(["src/main/resources/**/*"]),
