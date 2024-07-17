@@ -1,0 +1,31 @@
+load("@rules_java//java:defs.bzl", "java_library")
+load("@contrib_rules_jvm//java:defs.bzl", "java_test_suite", "junit5_deps")
+
+java_library(
+    name = "greeting-service",
+    srcs = glob(["src/main/java/**/*.java"]),
+    tags = ["lib"],
+    visibility = ["//teams:__subpackages__"],
+    deps = [
+        "@maven//:org_springframework_spring_context",
+    ],
+)
+
+java_test_suite(
+    name = "java-tests",
+    size = "small",
+    srcs = glob(["src/test/java/**/*.java"]),
+    jvm_flags = [
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+    ],
+    package_prefixes = [".com."],
+    resources = glob(["src/test/java/**/*.java"]),
+    runner = "junit5",
+    test_suffixes = [
+        "Test.java",
+    ],
+    deps = junit5_deps() + [
+        ":greeting-service",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)

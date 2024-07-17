@@ -24,6 +24,19 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(@types/node@20.14.9)
 
+  teams/libs/frontend/greeting-component:
+    dependencies:
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
+
   teams/team-2/remix-app:
     dependencies:
       '@remix-run/node':
@@ -35,14 +48,17 @@ importers:
       '@remix-run/serve':
         specifier: ^2.10.0
         version: 2.10.0(typescript@5.1.6)
+      greeting-component:
+        specifier: workspace:*
+        version: link:../../libs/frontend/greeting-component
       isbot:
         specifier: ^4.1.0
         version: 4.1.0
       react:
-        specifier: ^18.2.0
+        specifier: ^18.3.1
         version: 18.3.1
       react-dom:
-        specifier: ^18.2.0
+        specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@remix-run/dev':
@@ -99,6 +115,9 @@ importers:
 
   teams/team-2/vite-app:
     dependencies:
+      greeting-component:
+        specifier: workspace:*
+        version: link:../../libs/frontend/greeting-component
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -4931,7 +4950,7 @@ snapshots:
 
   '@types/react-dom@18.2.7':
     dependencies:
-      '@types/react': 18.2.20
+      '@types/react': 18.3.3
 
   '@types/react-dom@18.3.0':
     dependencies:

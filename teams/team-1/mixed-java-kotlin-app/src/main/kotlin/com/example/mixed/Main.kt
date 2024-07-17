@@ -3,7 +3,7 @@ package com.example.mixed
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["com.example"])
 open class Main {
     companion object {
         @JvmStatic

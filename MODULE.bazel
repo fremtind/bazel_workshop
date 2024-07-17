@@ -1,12 +1,17 @@
 bazel_dep(name = "aspect_bazel_lib", version = "2.7.7")
 bazel_dep(name = "protobuf", version = "27.2")
 bazel_dep(name = "contrib_rules_jvm", version = "0.27.0")
-bazel_dep(name = "rules_jvm_external", version = "6.1")
+bazel_dep(name = "rules_jvm_external", version = "6.2")
 bazel_dep(name = "rules_pkg", version = "0.10.1")
 bazel_dep(name = "rules_oci", version = "1.7.6")
-bazel_dep(name = "aspect_rules_js", version = "2.0.0-rc5")
+bazel_dep(name = "aspect_rules_js", version = "2.0.0-rc6")
 bazel_dep(name = "rules_nodejs", version = "6.2.0")
 bazel_dep(name = "rules_kotlin", version = "1.9.6")
+bazel_dep(name = "aspect_rules_ts", version = "3.0.0-rc1")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
+rules_ts_ext.deps()
+use_repo(rules_ts_ext, "npm_typescript")
 
 JUNIT_PLATFORM_VERSION = "1.10.2"
 
@@ -68,11 +73,21 @@ oci.pull(
         "linux/arm64",
     ],
 )
+oci.pull(
+    name = "nginx",
+    digest = "sha256:a45ee5d042aaa9e81e013f97ae40c3dda26fbe98f22b6251acdf28e579560d55",
+    image = "docker.io/library/nginx:1.27.0-alpine",
+    platforms = [
+        "linux/amd64",
+        "linux/arm64/v8",
+    ],
+)
 
 # For each oci.pull call, repeat the "name" here to expose them as dependencies.
 use_repo(oci, "openjdk_17")
 use_repo(oci, "eclipse_temurin_21")
 use_repo(oci, "ubi9_minimal")
+use_repo(oci, "nginx")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(node_version = "20.14.0")

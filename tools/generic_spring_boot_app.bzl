@@ -126,5 +126,4 @@ app:
             "--spring.config.additional-location=/opt/app/app.yml",
             "server",
         ],
-        container_test_configs = ["//apps/team-smart-utvikling/build-tools/shifter2:backend_test"],
     )

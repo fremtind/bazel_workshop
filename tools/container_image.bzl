@@ -1,11 +1,8 @@
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push", "oci_tarball")
-
-#load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
-#load("@container_structure_test//:defs.bzl", "container_structure_test")
 load("//tools:stamp_tags.bzl", "stamp_tags")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 
-def stamped_container_image(name, base_image, image_layers, cmd = None, entrypoint = None, workdir = None, container_test_configs = []):
+def stamped_container_image(name, base_image, image_layers, cmd = None, entrypoint = None, workdir = None):
     stamp_tags(
         name = "app_image_labels",
         remote_tags = [
