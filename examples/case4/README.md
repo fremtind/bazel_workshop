@@ -7,3 +7,8 @@ This is also the first case where we need external dependencies for Java.
 See the [MODULE.bazel](../../MODULE.bazel) file for the dependencies.
 
 After changing dependencies, run `REPIN=1 bazel run @maven//:pin` to update lockfile
+
+
+## Additional things to try out
+bazel query "deps('//examples/case4:greeter-test') intersect (//... union @maven//:*)"
+

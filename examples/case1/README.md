@@ -25,3 +25,4 @@ To see dependencies for the `hello_replaced` target, run:
 
 To see which targets depend on the `hello` target, run:
 `bazel query 'rdeps(//..., //examples/case1:hello)'`
+
