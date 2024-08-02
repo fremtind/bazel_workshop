@@ -12,3 +12,5 @@ After changing dependencies, run `REPIN=1 bazel run @maven//:pin` to update lock
 ## Additional things to try out
 bazel query "deps('//examples/case4:greeter-test') intersect (//... union @maven//:*)"
 
+![graph](case4.png)
+
