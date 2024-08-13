@@ -17,7 +17,15 @@ JUNIT_PLATFORM_VERSION = "1.10.2"
 
 SPRING_BOOT_VERSION = "3.3.1"
 
+SWAGGER_VERSION = "2.2.21"
+
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.artifact(
+    artifact = "jakarta.servlet-api",
+    group = "jakarta.servlet",
+    neverlink = True,
+    version = "6.0.0",
+)
 maven.install(
     artifacts = [
         "org.junit.platform:junit-platform-launcher:%s" % JUNIT_PLATFORM_VERSION,
@@ -28,6 +36,16 @@ maven.install(
         "org.springframework.boot:spring-boot-starter-test:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-loader:%s" % SPRING_BOOT_VERSION,
+        "jakarta.validation:jakarta.validation-api:3.0.2",
+        "io.swagger.core.v3:swagger-annotations:%s" % SWAGGER_VERSION,
+        #        "io.swagger.core.v3:swagger-core:%s" % SWAGGER_VERSION,
+        #        "io.swagger.core.v3:swagger-models:%s" % SWAGGER_VERSION,
+        #        "org.springdoc:springdoc-openapi-starter-webmvc-ui:%s" % SPRINGDOC_VERSION,
+        "com.google.code.findbugs:jsr305:3.0.2",
+        "com.google.code.gson:gson:2.10.1",
+        "io.gsonfire:gson-fire:1.9.0",
+        "org.threeten:threetenbp:1.4.3",
+        "org.openapitools:jackson-databind-nullable:0.2.3",
     ],
     fetch_sources = True,
     lock_file = "@//:maven_install.json",

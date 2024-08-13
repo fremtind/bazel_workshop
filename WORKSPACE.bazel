@@ -17,3 +17,17 @@ http_jar(
 )
 
 register_toolchains("//:kotlin_toolchain")
+
+http_archive(
+    name = "openapi_tools_generator_bazel",
+    sha256 = "ada94694b10f2503c52a48427bd8589323bff5910bd1a7e5212ce34702d0af65",
+    urls = ["https://github.com/OpenAPITools/openapi-generator-bazel/releases/download/v0.1.6/openapi-tools-generator-bazel-0.1.6.tar.gz"],
+)
+
+load("@openapi_tools_generator_bazel//:defs.bzl", "openapi_tools_generator_bazel_repositories")
+
+# You can provide any version of the CLI that has been uploaded to Maven
+openapi_tools_generator_bazel_repositories(
+    openapi_generator_cli_version = "6.4.0",
+    sha256 = "35aead300e0c9469fbd9d30cf46f4153897dcb282912091ca4ec9212dce9d151",
+)

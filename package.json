@@ -2,8 +2,10 @@
 	"name": "bazel_workshop",
 	"private": true,
 	"version": "1.0.0",
-	"dependencies": {},
 	"pnpm": {
 		"onlyBuiltDependencies": []
+	},
+	"devDependencies": {
+		"openapi-typescript-codegen": "^0.29.0"
 	}
 }
