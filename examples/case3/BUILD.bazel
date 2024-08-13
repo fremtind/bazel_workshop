@@ -10,3 +10,12 @@ java_binary(
     main_class = "examples.case3.HelloWorld",
     deps = [":greeter-lib"],
 )
+
+sh_test(
+    name = "acceptance_test",
+    size = "small",
+    srcs = ["hello_world_test.sh"],
+    data = [
+        ":hello",
+    ],
+)
