@@ -22,6 +22,18 @@ It also contains a CI workflow that shows how to build and test all changed targ
 - Macros
 - Visibility
 
+### Workshop
+ - Case 1: Hello World in Bazel
+   - Change the text in the `hello` target, see which targets gets rebuilt
+   - Run tests
+   - Bazel queries
+ - Case 2: Simple Java application
+   - Create a second Java library
+   - Run tests
+ - Case 3: Spring Boot in Bazel
+ - Case 4: Docker in Bazel
+ - Case 5: Vite + React frontend in Bazel
+
 ### Examples
 - [Case 1: Hello World in Bazel](examples/case1/README.md)
 - [Case 2: Shell scripts](examples/case2/README.md)
