@@ -1,0 +1,26 @@
+load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains")
+
+genrule(
+    name = "hello",
+    outs = ["hello.txt"],
+    cmd = "echo 'Hello, World!' > $@",
+)
+
+genrule(
+    name = "hello_replaced",
+    srcs = [":hello"],
+    outs = ["replaced.txt"],
+    cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@",
+)
+
+assert_contains(
+    name = "test_hello",
+    actual = ":hello",
+    expected = "Hello, World!",
+)
+
+assert_contains(
+    name = "test_replaced",
+    actual = ":hello_replaced",
+    expected = "Hello, Workshop!",
+)

@@ -23,6 +23,26 @@ It also contains a CI workflow that shows how to build and test all changed targ
 - Visibility
 
 ### Workshop
+Intro: 15min
+
+Om oss
+Hva er Bazel
+Hvorfor Bazel og monorepo
+Kjapt om Bazel (build, test, query)
+Hvordan 3. parts dependencies håndteres
+
+Cases:
+15min per case
+60min
+
+pause: 10min
+
+Outtro: 10min
+Veien videre
+Mer om bazel_workshop repoet og hva man kan finne av eksempel
+Kontakt oss
+
+
  - Case 1: Hello World in Bazel
    - Change the text in the `hello` target, see which targets gets rebuilt
    - Run tests
@@ -30,9 +50,22 @@ It also contains a CI workflow that shows how to build and test all changed targ
  - Case 2: Simple Java application
    - Create a second Java library
    - Run tests
+   - Make commented out test pass
+   - Lag en macro for å bygge caset
  - Case 3: Spring Boot in Bazel
- - Case 4: Docker in Bazel
+   - Docker eksempel
+     - Eksempel på docker build + docker run
+     - multi-arch
+   - Nye regelsett
+   - Eksterne dependencies
+   - wget test mot et endepunkt
  - Case 5: Vite + React frontend in Bazel
+   - Docker eksempel
+ - Case 6: OpenApi specs
+   - Generate code from OpenApi specs
+ - Case 7: Bazel CI
+   - Build changed targets
+   - Stamping?
 
 ### Remote caching
 This workshop works with a free online remote cache to speed up builds, called [NativeLink](https://app.nativelink.com/).

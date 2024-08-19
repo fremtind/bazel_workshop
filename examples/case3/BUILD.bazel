@@ -19,3 +19,10 @@ sh_test(
         ":hello",
     ],
 )
+
+# uncomment and make test pass
+#java_test(
+#    name = "greeter_test",
+#    srcs = ["GreeterTest.java"],
+#    deps = [":greeter-lib"],
+#)

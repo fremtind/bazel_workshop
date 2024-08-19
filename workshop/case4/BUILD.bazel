@@ -1,0 +1,57 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm//examples/case7:vite/package_json.bzl", vite_bin = "bin")
+load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
+
+npm_link_all_packages(name = "node_modules")
+
+DEPS = [
+    "index.html",
+    "package.json",
+    "tsconfig.json",
+    "vite.config.mjs",
+    ":node_modules",
+]
+
+vite_bin.vite(
+    name = "build",
+    srcs = glob(
+        [
+            "src/**/*",
+        ],
+    ) + DEPS,
+    args = [
+        "build",
+        "--config",
+        "vite.config.mjs",
+    ],
+    chdir = package_name(),
+    out_dirs = ["dist"],
+    tags = ["app"],
+)
+
+vite_bin.vite_binary(name = "vite_dev")
+
+js_run_devserver(
+    name = "dev",
+    args = [
+        "dev",
+        "--config",
+        "vite.config.mjs",
+    ],
+    chdir = package_name(),
+    data = glob(
+        [
+            "src/**/*",
+        ],
+    ) + DEPS,
+    tool = ":vite_dev",
+)
+
+vite_bin.vite_binary(
+    name = "start",
+    args = [
+        "preview",
+    ],
+    chdir = package_name(),
+    data = [":build"],
+)
