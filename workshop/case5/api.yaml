@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: Hello-API
+  description: api for returning hello <who>
+  version: 0.0.1
+servers:
+  - url: 'https'
+
+paths:
+  /api/hello:
+    get:
+      operationId: hello
+      description: returns hello
+      tags:
+        - hello
+      parameters:
+        - in: query
+          name: who
+          required: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+      responses:
+        default:
+          description: returns hello
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HelloWorldResponse'
+
+components:
+  schemas:
+    HelloWorldResponse:
+      type: object
+      properties:
+        hello:
+          type: string
+          example: world

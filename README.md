@@ -59,13 +59,14 @@ Kontakt oss
    - Nye regelsett
    - Eksterne dependencies
    - wget test mot et endepunkt
- - Case 5: Vite + React frontend in Bazel
+ - Case 4: Vite + React frontend in Bazel
    - Docker eksempel
- - Case 6: OpenApi specs
+ - Case 5: OpenApi specs
    - Generate code from OpenApi specs
- - Case 7: Bazel CI
+ - Case 6: Bazel CI / teams
    - Build changed targets
    - Stamping?
+   - query changed oci_image
 
 ### Remote caching
 This workshop works with a free online remote cache to speed up builds, called [NativeLink](https://app.nativelink.com/).

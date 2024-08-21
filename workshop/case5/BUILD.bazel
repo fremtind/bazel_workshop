@@ -1,0 +1,13 @@
+load("//tools:openapi.bzl", "openapi_spring", "openapi_typescript")
+
+openapi_spring(
+    name = "openapi_spring",
+    package_name = "com.workshop.case5",
+    src = "api.yaml",
+    visibility = ["//visibility:public"],
+)
+
+openapi_typescript(
+    name = "openapi_typescript",
+    src = "api.yaml",
+)
