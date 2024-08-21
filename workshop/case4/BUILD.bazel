@@ -1,6 +1,7 @@
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("@npm//examples/case7:vite/package_json.bzl", vite_bin = "bin")
 load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
+load("@npm//workshop/case4:vite/package_json.bzl", vite_bin = "bin")
+load("@npm//workshop/case4:typescript/package_json.bzl", typescript_bin = "bin")
 
 npm_link_all_packages(name = "node_modules")
 
@@ -54,4 +55,23 @@ vite_bin.vite_binary(
     ],
     chdir = package_name(),
     data = [":build"],
+)
+
+typescript_bin.tsc_test(
+    name = "ts_test",
+    size = "small",
+    args = [
+        "-b",
+    ],
+    chdir = package_name(),
+    data = glob(
+        [
+            "src/**/*.tsx",
+        ],
+    ) + [
+        "package.json",
+        "tsconfig.json",
+    ] + [
+        ":node_modules",
+    ],
 )

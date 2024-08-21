@@ -80,8 +80,8 @@ def openapi_spring(
 
 def openapi_typescript(name, src, exportFetch = False):
     npm_package(
-        name = name,
-        srcs = ["{}_typescript_types".format(name)],
+        name = "pkg",
+        srcs = ["{}_typescript_types".format(name), "package.json"],
         package = name,
         root_paths = [
             native.package_name(),

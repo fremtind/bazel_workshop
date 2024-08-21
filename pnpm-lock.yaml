@@ -162,6 +162,9 @@ importers:
 
   workshop/case4:
     dependencies:
+      openapi_typescript:
+        specifier: workspace:*
+        version: link:../case5
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -172,9 +175,14 @@ importers:
         specifier: ^5.2.11
         version: 5.3.1(@types/node@20.14.9)
     devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
       vitest:
         specifier: ^1.5.3
         version: 1.5.3(@types/node@20.14.9)
+
+  workshop/case5: {}
 
 packages:
 
@@ -3793,6 +3801,11 @@ packages:
 
   typescript@5.2.2:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@5.5.4:
+    resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -8297,6 +8310,8 @@ snapshots:
   typescript@5.1.6: {}
 
   typescript@5.2.2: {}
+
+  typescript@5.5.4: {}
 
   ufo@1.5.3: {}
 
