@@ -30,7 +30,7 @@ def openapi_spring(
             "@maven//:jakarta_annotation_jakarta_annotation_api",
             "@maven//:jakarta_servlet_jakarta_servlet_api",
             "@maven//:jakarta_validation_jakarta_validation_api",
-            "@maven//:org_apache_commons_commons_lang3",
+            #            "@maven//:org_apache_commons_commons_lang3",
             "@maven//:org_openapitools_jackson_databind_nullable",
             "@maven//:org_springframework_spring_context",
             "@maven//:org_springframework_spring_web",
