@@ -94,7 +94,7 @@ runs:
             echo EOF
         } >> "$GITHUB_OUTPUT"
 
-        echo "attr('tags', container, set($(echo "$FILTERED_CHANGED_TARGETS")))" > ${{ inputs.tmp_workdir }}/changed_containers_query_file.txt
+        echo "kind(oci_image, set($(echo "$FILTERED_CHANGED_TARGETS")))" > ${{ inputs.tmp_workdir }}/changed_containers_query_file.txt
         CHANGED_CONTAINERS=$((bazel query --query_file=${{ inputs.tmp_workdir }}/changed_containers_query_file.txt) || echo "")
         echo "attr('tags', lib, set($(echo "$FILTERED_CHANGED_TARGETS")))" > ${{ inputs.tmp_workdir }}/changed_libs_query_file.txt
         CHANGED_LIBS=$((bazel query --query_file=${{ inputs.tmp_workdir }}/changed_libs_query_file.txt) || echo "")
