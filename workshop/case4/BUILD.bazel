@@ -2,6 +2,9 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
 load("@npm//workshop/case4:vite/package_json.bzl", vite_bin = "bin")
 load("@npm//workshop/case4:typescript/package_json.bzl", typescript_bin = "bin")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_filegroup", "pkg_files", "strip_prefix")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 npm_link_all_packages(name = "node_modules")
 
@@ -73,5 +76,50 @@ typescript_bin.tsc_test(
         "tsconfig.json",
     ] + [
         ":node_modules",
+    ],
+)
+
+pkg_files(
+    name = "pkg_build",
+    srcs = [
+        ":build",  # produced by vite
+    ],
+    prefix = "/usr/share/nginx/html",  # nginx default folder to serve content
+    strip_prefix = strip_prefix.from_pkg("dist"),  # remove the <package-name>/dist (workshop/case4/dist in this case) folders from the path of the assets
+)
+
+pkg_tar(
+    name = "tar",
+    srcs = [
+        ":pkg_build",
+    ],
+    include_runfiles = True,
+    strip_prefix = ".",
+    tags = [
+        "manual",
+        "no-cache",
+    ],
+)
+
+oci_image(
+    name = "app_image",
+    base = "@nginx",
+    tars = [":tar"],
+)
+
+repo_tags = [
+    "case4:latest",
+]
+
+# Run a local container with:
+# $ bazel run :tarball
+# $ docker run --rm bazel/example:latest
+oci_tarball(
+    name = "tarball",
+    image = ":app_image",
+    repo_tags = repo_tags,
+    tags = [
+        "manual",
+        "no-cache",
     ],
 )
