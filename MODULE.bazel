@@ -19,6 +19,8 @@ SPRING_BOOT_VERSION = "3.3.1"
 
 SWAGGER_VERSION = "2.2.21"
 
+SPRINGDOC_VERSION = "2.6.0"
+
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.artifact(
     artifact = "jakarta.servlet-api",
@@ -36,6 +38,7 @@ maven.install(
         "org.springframework.boot:spring-boot-starter-test:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-autoconfigure:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-loader:%s" % SPRING_BOOT_VERSION,
+        "org.springdoc:springdoc-openapi-starter-webmvc-ui:%s" % SPRINGDOC_VERSION,
         "jakarta.validation:jakarta.validation-api:3.0.2",
         "io.swagger.core.v3:swagger-annotations:%s" % SWAGGER_VERSION,
         #        "io.swagger.core.v3:swagger-core:%s" % SWAGGER_VERSION,

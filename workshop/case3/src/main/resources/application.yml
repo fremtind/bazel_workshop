@@ -1,2 +1,5 @@
 app:
   version: dev
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
