@@ -1,6 +1,6 @@
 java_library(
     name = "customer",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["*.java"]),
     visibility = ["//workshop/case3:__subpackages__"],
     deps = [
         "@maven//:org_springframework_boot_spring_boot_starter_web",

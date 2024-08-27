@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class ProductController {
+public class ProductsController {
 
     @RequestMapping(
             method = {RequestMethod.GET},

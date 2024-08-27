@@ -5,17 +5,12 @@ load("@aspect_bazel_lib//lib:tar.bzl", "tar")
 
 java_library(
     name = "app_libs",
-    srcs = glob(["src/main/java/**/*.java"]),
     resources = glob(["src/main/resources/**"]),
-    deps = [
+    runtime_deps = [
+        "//workshop/case3/src/main/java/com/example:main",
         "//workshop/case3/src/main/java/com/example/customer",
         "//workshop/case3/src/main/java/com/example/hello",
         "//workshop/case3/src/main/java/com/example/products",
-        "@maven//:org_springdoc_springdoc_openapi_starter_webmvc_ui",
-        "@maven//:org_springframework_boot_spring_boot",
-        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
-        "@maven//:org_springframework_boot_spring_boot_loader",
-        "@maven//:org_springframework_boot_spring_boot_starter_web",
     ],
 )
 
@@ -27,6 +22,13 @@ springboot(
     java_library = ":app_libs",
     tags = ["app"],
     visibility = ["//visibility:public"],
+    deps = [
+        "@maven//:org_springdoc_springdoc_openapi_starter_webmvc_ui",
+        "@maven//:org_springframework_boot_spring_boot",
+        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+        "@maven//:org_springframework_boot_spring_boot_loader",
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
+    ],
 )
 
 java_test_suite(
