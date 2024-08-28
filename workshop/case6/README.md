@@ -58,3 +58,15 @@ Same as above, you can combine this with the list of changed targets to find onl
 ```shell
 bazel query "attr(tags, lib, set($CHANGED_TARGETS))"
 ```
+
+## Additional things to try
+### Run bazel-diff locally
+You can run bazel-diff locally to see what targets have changed between two commits.
+The script accepts two arguments, the commit hashes to compare.
+It defaults the second argument to HEAD if not provided.
+`./workshop/case6/bazel-diff.sh [oldest_commit_sha] [newest_commit_sha]`
+
+Example:
+```shell
+./workshop/case6/bazel-diff.sh 234fb81c60890b5e771e151e162bcfef5b9b2a42 6b79fe920a6028ba74581d8888926d84523e2bdd
+```
