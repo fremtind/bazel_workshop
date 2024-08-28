@@ -70,3 +70,7 @@ Example:
 ```shell
 ./workshop/case6/bazel-diff.sh 234fb81c60890b5e771e151e162bcfef5b9b2a42 6b79fe920a6028ba74581d8888926d84523e2bdd
 ```
+
+### Commit changes to one of the apps under `/teams/` and see how the CI pipeline reacts
+
+### Commit changes to one of the libs under `/teams/libs/` and see how the CI pipeline reacts

@@ -9,21 +9,39 @@ The given example shows how to create a simple `genrule` that prints "Hello, Wor
 It also shows how to consume a file produced by another target.
 
 ```
-bazel build //examples/case1:hello
-cat bazel-bin/examples/case1/hello.txt
+bazel build /case1:hello
+cat bazel-bin/workshop/case1/hello.txt
 
-bazel build //examples/case1:hello_replaced
-cat bazel-bin/examples/case1/replaced.txt
+bazel build //workshop/case1:hello_replaced
+cat bazel-bin/workshop/case1/replaced.txt
 ```
 
 ## Additional things to try out
 
+### Query the build graph
 One of Bazels strengths is the query language on the build graph.
 
 To see dependencies for the `hello_replaced` target, run:
-`bazel query 'deps(//examples/case1:hello_replaced)'`
+`bazel query 'deps(//workshop/case1:hello_replaced)'`
 
 To see which targets depend on the `hello` target, run:
-`bazel query 'rdeps(//..., //examples/case1:hello)'`
+`bazel query 'rdeps(//..., //workshop/case1:hello)'`
 
 ![graph](case1.png)
+
+### Inspect the bazel output tree
+In the root of the repository, you should notice 4 `bazel-` directories:
+```
+<workspace-name>/                         <== The workspace root
+  bazel-bazel_workshop => <..._main>      <== Symlink to execRoot
+  bazel-out => <...bazel-out>             <== Convenience symlink to outputPath
+  bazel-bin => <...bin>                   <== Convenience symlink to most recent written bin dir $(BINDIR)
+  bazel-testlogs => <...testlogs>         <== Convenience symlink to the test logs directory
+```
+
+Bazel uses the `execRoot` to store build outputs in the tree.
+When you run an action, the default is that Bazel creates a sandboxed environment for the action to run in. Then the output of the action is stored in the `execRoot`, according to the directory layout.
+
+You can inspect the `bazel-out` directory to see the outputs of the build actions, including runfiles.
+
+Read more about the [Bazel output tree](https://bazel.build/remote/output-directories).
