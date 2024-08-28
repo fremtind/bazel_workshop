@@ -9,6 +9,12 @@ See bazel-bin/workshop/case2/hello.runfiles/_main/workshop/case2/hello for the w
 
 
 ## Additional things to try out
+
+### Updating maven dependencies
+Maven dependencies are resolved using the WORKSPACE file and the maven_install.json file. 
+Update the WORKSPACE.bazel file with new versions and run `bazel run @maven//:pin` to update the maven_install.json file.
+
+
 ### Query Bazel for the dependency graph of the hello target:
 `bazel query "deps(//workshop/case2:hello)"`
 

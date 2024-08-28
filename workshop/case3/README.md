@@ -16,3 +16,10 @@ In this case, we also have set up Bazel targets for creating Docker images for o
 ### Create a Docker image
 `bazel run :tarball` builds an OCI compatible image and loads it into your Docker context.  
 Afterwards, you can run the application with `docker run --rm -it -p8080:8080 case3:latest`
+
+## Additional things to try out
+
+The controller tests does not depend on all the controllers in the application. 
+If you run: 
+`bazel test ...`
+and then make a change in ProductController.java, only the ContextTest and ProductControllerTest will be re-run. CustomerControllerTest will be cached. 
