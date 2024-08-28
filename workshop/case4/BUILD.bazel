@@ -38,7 +38,7 @@ tar(
 
 oci_image(
     name = "app_image",
-    base = "@openjdk_17",
+    base = "@eclipse_temurin_21",
     entrypoint = [
         "java",
         "-jar",
