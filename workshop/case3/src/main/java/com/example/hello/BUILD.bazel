@@ -1,0 +1,12 @@
+java_library(
+    name = "hello",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//workshop/case3:__subpackages__"],
+    deps = [
+        "//workshop/case5:openapi_spring",
+        "@maven//:io_swagger_core_v3_swagger_annotations",
+        "@maven//:jakarta_validation_jakarta_validation_api",
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
+        "@maven//:org_springframework_spring_web",
+    ],
+)
