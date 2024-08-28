@@ -9,7 +9,7 @@ The given example shows how to create a simple `genrule` that prints "Hello, Wor
 It also shows how to consume a file produced by another target.
 
 ```
-bazel build /case1:hello
+bazel build //workshop/case1:hello
 cat bazel-bin/workshop/case1/hello.txt
 
 bazel build //workshop/case1:hello_replaced
