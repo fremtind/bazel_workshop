@@ -55,6 +55,7 @@ def generic_spring_boot_app(name, package, java_library, test_srcs, test_deps = 
             ],
         )
 
+    # This target is used to read the app.version from the workspace status file (bazel-out/stable-status.txt)
     stamp_tags(
         name = "stamp_substitutions",
         remote_tags = [
@@ -62,6 +63,7 @@ def generic_spring_boot_app(name, package, java_library, test_srcs, test_deps = 
         ],
     )
 
+    # Generate app.yml file which supports replacing the app.version variable
     write_file(
         name = "generate_app_yml",
         out = "app.yml.tmpl",
@@ -73,6 +75,8 @@ app:
         ],
     )
 
+    # Expand the template and stamp the app.version variable if the build is run with --stamp (or --config=release)
+    # if --stamp is not set, replace the variable with "dev"
     expand_template(
         name = "app_yml",
         template = "generate_app_yml",
