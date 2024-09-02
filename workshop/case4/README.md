@@ -8,9 +8,6 @@ Adding the small modules as dependencies to the tests also allows for Bazel to f
 This is functionality which comes in very handy in a large codebase or monorepo with many apps, because it keeps build times low and it will 
 easily allow you to figure out which apps are affected by a change (more on this in [case 6](../case6/README.md))
 
-Fortell om oppslitting med flere BUILD.bazel filer
-Fortell at maven/gradle er kastet ut, stopp diskusjon tidlig
-
 ## Things to try out
 
 ### Build the application
