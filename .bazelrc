@@ -14,11 +14,14 @@ common --@aspect_rules_ts//ts:skipLibCheck=honor_tsconfig
 
 build --legacy_external_runfiles # https://github.com/bazelbuild/rules_kotlin/issues/924, Spring Boot rules also depend on this
 
+## Stamping (see scripts/README.md)
+# This is used to stamp the build with the current git commit
 build:release --stamp
 build:release --workspace_status_command=scripts/get_workspace_status
 
 run:release --stamp
 run:release --workspace_status_command=scripts/get_workspace_status
+## End stamping
 
 # Load any settings & overrides specific to the current user from `.aspect/bazelrc/user.bazelrc`.
 # This file should appear in `.gitignore` so that settings are not shared with team members. This
