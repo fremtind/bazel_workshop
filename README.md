@@ -2,9 +2,6 @@
 
 ## Getting started
 - Install Bazelisk: https://bazel.build/install/bazelisk
-- Install Bazel plugin for your favorite IDE:
-  - Intellij: https://plugins.jetbrains.com/plugin/8609-bazel-for-intellij
-  - VSCode: https://marketplace.visualstudio.com/items?itemName=BazelBuild.vscode-bazel
 - Clone this repository
 - Run `bazel build //workshop/case1:hello` to see if everything is working
 - Check out the workshop cases below 
@@ -19,17 +16,17 @@ It also contains a CI workflow that shows how to build and test all changed targ
    - Introduction to simple genrule targets and target dependencies
  - [Case 2: Simple Java application](workshop/case2/README.md)
    - Building a simple Java application using native rules_java with tests
- - [Case 3: Spring Boot in Bazel](workshop/case3/README.md)
+ - [Case 3: OpenApi specs](workshop/case3/README.md)
+   - Generate Java and TypeScript from OpenApi specs
+   - Consume the generated code in a Spring Boot application and a React frontend
+ - [Case 4: Spring Boot in Bazel](workshop/case4/README.md)
    - Introducing rules_spring
    - Building a Spring Boot application with tests
    - Creating a Docker image
- - [Case 4: Vite + React frontend in Bazel](workshop/case4/README.md)
+ - [Case 5: Vite + React frontend in Bazel](workshop/case5/README.md)
    - Introducing rules_js
    - Bulding a Vite + React frontend application with tests
    - Creating a Docker image
- - [Case 5: OpenApi specs](workshop/case5/README.md)
-   - Generate Java and TypeScript from OpenApi specs
-   - Consume the generated code in a Spring Boot application and a React frontend
  - [Case 6: Bazel CI](workshop/case6/README.md)
    - Explains the CI workflow in this repository
    - Show how to use tags and queries to select targets

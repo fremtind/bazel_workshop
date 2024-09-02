@@ -3,7 +3,7 @@
     "jsx": "react-jsx",
     "paths": {
       "openapi_typescript/*": [
-        "../../bazel-bin/workshop/case5/pkg/*"
+        "../../bazel-bin/workshop/case3/pkg/*"
       ]
     }
   }
