@@ -85,7 +85,7 @@ pkg_files(
         ":build",  # produced by vite
     ],
     prefix = "/usr/share/nginx/html",  # nginx default folder to serve content
-    strip_prefix = strip_prefix.from_pkg("dist"),  # remove the <package-name>/dist (workshop/case4/dist in this case) folders from the path of the assets
+    strip_prefix = strip_prefix.from_pkg("dist"),  # remove the <package-name>/dist (workshop/case5/dist in this case) folders from the path of the assets
 )
 
 pkg_tar(
