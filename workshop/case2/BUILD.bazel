@@ -32,13 +32,5 @@ java_junit5_test(
         "//workshop/case2:greeter-lib",
         "@maven//:org_assertj_assertj_core",
         "@maven//:org_junit_jupiter_junit_jupiter_api",
-        #        "@maven//:org_junit_jupiter_junit_jupiter_params",
     ] + junit5_deps(),
 )
-
-# uncomment and make test pass
-#java_test(
-#    name = "greeter_test",
-#    srcs = ["GreeterTest.java"],
-#    deps = [":greeter-lib"],
-#)
