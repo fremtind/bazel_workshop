@@ -12,22 +12,6 @@ importers:
         specifier: ^0.29.0
         version: 0.29.0
 
-  examples/case7:
-    dependencies:
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
-      vite:
-        specifier: ^5.2.11
-        version: 5.2.11(@types/node@20.14.9)
-    devDependencies:
-      vitest:
-        specifier: ^1.5.3
-        version: 1.5.3(@types/node@20.14.9)
-
   teams/libs/frontend/greeting-component:
     dependencies:
       react:
@@ -160,11 +144,13 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.9)
 
-  workshop/case4:
+  workshop/case3: {}
+
+  workshop/case5:
     dependencies:
       openapi_typescript:
         specifier: workspace:*
-        version: link:../case5
+        version: link:../case3
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -173,7 +159,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       vite:
         specifier: ^5.2.11
-        version: 5.3.1(@types/node@20.14.9)
+        version: 5.3.2(@types/node@20.14.9)
     devDependencies:
       typescript:
         specifier: ^5.5.4
@@ -181,8 +167,6 @@ importers:
       vitest:
         specifier: ^1.5.3
         version: 1.5.3(@types/node@20.14.9)
-
-  workshop/case5: {}
 
 packages:
 
@@ -4147,7 +4131,7 @@ snapshots:
   '@babel/code-frame@7.24.7':
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.0
+      picocolors: 1.0.1
 
   '@babel/compat-data@7.24.7': {}
 
@@ -4292,7 +4276,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.0
+      picocolors: 1.0.1
 
   '@babel/parser@7.24.7':
     dependencies:

@@ -1,12 +1,12 @@
 load("@contrib_rules_jvm//java:defs.bzl", "java_junit5_test", "junit5_deps")
 
 java_junit5_test(
-    name = "ProductsControllerTest",
+    name = "CustomerControllerTest",
     size = "small",
-    srcs = ["ProductsControllerTest.java"],
+    srcs = ["CustomerControllerTest.java"],
     deps = junit5_deps() + [
-        "//workshop/case3/src/main/java/com/example:main",
-        "//workshop/case3/src/main/java/com/example/products",
+        "//workshop/case4/src/main/java/com/example:main",
+        "//workshop/case4/src/main/java/com/example/customer",
         "@maven//:org_hamcrest_hamcrest",
         "@maven//:org_junit_jupiter_junit_jupiter_api",
         "@maven//:org_springframework_boot_spring_boot_starter_test",

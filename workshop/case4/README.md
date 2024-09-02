@@ -1,63 +1,35 @@
-# Case 4: Vite + React + TypeScript + Bazel
+# Case 4: Bazel and Spring Boot
 
-In this case we use Vite to build a TypeScript React app, and Bazel to build the app and run tests.  
-The approach in this example also works with local development through `pnpm` as developers are used to.
+Spring Boot executable jars need a different layout than regular Java jars.  
+Luckily, we can use [Salesforce rules_spring](https://github.com/salesforce/rules_spring) to create Spring Boot compatible jars in Bazel
 
-We use [rules_js](https://github.com/aspect-build/rules_js) to handle the JavaScript ecosystem in Bazel.
+We have also split up the application into small modules which can be built separately. This allows for faster builds and better caching because you dont need to rebuild everything. 
+Adding the small modules as dependencies to the tests also allows for Bazel to figure out which tests should be executed again when a file changes.
+This is functionality which comes in very handy in a large codebase or monorepo with many apps, because it keeps build times low and it will 
+easily allow you to figure out which apps are affected by a change (more on this in case 6)
 
-Bazel only handles packages from the `pnpm-lock.yaml` at the workspace root, so when you make changes to package.json remember to run `pnpm install` afterward.
-To see the setup for pnpm, check the [npm_translate_lock function in MODULE.bazel at root](../../MODULE.bazel). 
-
-To make your IDE happy when using local workspace packages, you have to extra paths to the Bazel output in your `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "openapi_typescript/*": [
-        "../../bazel-bin/workshop/case5/pkg/*"
-      ]
-    }
-  }
-}
-```
-
-See more about this in the [rules_js FAQ](https://github.com/aspect-build/rules_js/blob/main/docs/faq.md#making-the-editor-happy) in this case.
 
 ## Things to try out
 
+### Start the application
+`bazel run :app` starts the Spring Boot application
+
 ### Build the application
-`bazel build :build`
-
-### Run application in dev mode
-`bazel run :dev` - note that this does not notice changed files in the workspace, so you have to restart the command to see changes.  
-To get hot reloading through Bazel you need to use ibazel, see [bazel-watcher](https://github.com/bazelbuild/bazel-watcher).  
-Then you can run `ibazel run :dev` or `npx @bazel/ibazel run :dev` instead.
-
-Dev mode also works through `pnpm run dev`, which goes outside of Bazel
+`bazel build :app`
 
 ### Create a Docker image
 `bazel run :tarball` builds an OCI compatible image and loads it into your Docker context.  
-Afterwards, you can run the application with `docker run --rm -it -p80:80 case4:latest`
+Afterwards, you can run the application with `docker run --rm -it -p8080:8080 case3:latest`
 
-### Inspect the build outputs
-You can run `bazel cquery //workshop/case4:<target> --output=files` to get the files output for a given target.
+## Additional things to try out
 
-If you run `bazel cquery //workshop/case4:tar --output=files` you will get the tar layer for application code. You can then inspect the tar by running `tar -tvf bazel-bin/workshop/case4/tar.tar`:
-```shell
-drwxr-xr-x  0 0      0           0  1 jan  2000 usr/
-drwxr-xr-x  0 0      0           0  1 jan  2000 usr/share/
-drwxr-xr-x  0 0      0           0  1 jan  2000 usr/share/nginx/
-drwxr-xr-x  0 0      0           0  1 jan  2000 usr/share/nginx/html/
-drwxr-xr-x  0 0      0           0  1 jan  2000 usr/share/nginx/html/assets/
--rw-r--r--  0 0      0      142531  1 jan  2000 usr/share/nginx/html/assets/index-DDIbAWc_.js
--rw-r--r--  0 0      0         334  1 jan  2000 usr/share/nginx/html/index.html
-```
+#### Run the tests
+The controller tests does not depend on all the controllers in the application. 
+If you run: 
+`bazel test ...`
+and then make a change in ProductController.java, only the ContextTest and ProductControllerTest will be re-run. CustomerControllerTest will be cached. 
 
-## Additional things to try
+#### Add a new module with Spring contollers and tests
 
-### Can you include the [greeting-component](../../teams/libs/frontend/greeting-component/package.json) in the app?
-
-### Can you transpile the TypeScript to JavaScript before building the app with Vite?
-Check out [rules_swc](https://github.com/aspect-build/rules_swc) for an example on how to transpile TypeScript to JavaScript with Bazel.
-This could be useful if you want to reuse the JavaScript in tests to avoid multiple transpilations.
+There is a test in com.example.shoppingcart. Make it pass by adding a new module with a controller and bazel targets
+Bonus points if you use the openapi specification from 'case 5' "//workshop/case3:openapi_spring" 

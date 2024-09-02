@@ -1,10 +1,10 @@
 package com.example.hello;
 
-import com.workshop.case5.models.HelloWorldResponse;
+import com.workshop.case3.models.HelloWorldResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.workshop.case5.HelloApi;
+import com.workshop.case3.HelloApi;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import jakarta.validation.Valid;

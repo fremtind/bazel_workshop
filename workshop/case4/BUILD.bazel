@@ -1,110 +1,50 @@
-load("@npm//:defs.bzl", "npm_link_all_packages")
-load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
-load("@npm//workshop/case4:vite/package_json.bzl", vite_bin = "bin")
-load("@npm//workshop/case4:typescript/package_json.bzl", typescript_bin = "bin")
+load("@rules_spring//springboot:springboot.bzl", "springboot")
+load("@contrib_rules_jvm//java:defs.bzl", "java_test_suite", "junit5_deps")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_filegroup", "pkg_files", "strip_prefix")
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("@aspect_bazel_lib//lib:tar.bzl", "tar")
 
-npm_link_all_packages(name = "node_modules")
-
-DEPS = [
-    "index.html",
-    "package.json",
-    "tsconfig.json",
-    "vite.config.mjs",
-    ":node_modules",
-]
-
-vite_bin.vite(
-    name = "build",
-    srcs = glob(
-        [
-            "src/**/*",
-        ],
-    ) + DEPS,
-    args = [
-        "build",
-        "--config",
-        "vite.config.mjs",
+java_library(
+    name = "app_libs",
+    resources = glob(["src/main/resources/**"]),
+    exports = [
+        "//workshop/case4/src/main/java/com/example:main",
+        "//workshop/case4/src/main/java/com/example/customer",
+        "//workshop/case4/src/main/java/com/example/hello",
+        "//workshop/case4/src/main/java/com/example/products",
     ],
-    chdir = package_name(),
-    out_dirs = ["dist"],
+)
+
+springboot(
+    name = "app",
+    boot_app_class = "com.example.Main",
+    boot_launcher_class = "org.springframework.boot.loader.launch.JarLauncher",  # Enable new Spring Boot 3.2 boot loader
+    dupeclassescheck_enable = True,  # Check for duplicate classes in dependencies
+    java_library = ":app_libs",
     tags = ["app"],
-)
-
-vite_bin.vite_binary(name = "vite_dev")
-
-js_run_devserver(
-    name = "dev",
-    args = [
-        "dev",
-        "--config",
-        "vite.config.mjs",
-    ],
-    chdir = package_name(),
-    data = glob(
-        [
-            "src/**/*",
-        ],
-    ) + DEPS,
-    tool = ":vite_dev",
-)
-
-vite_bin.vite_binary(
-    name = "start",
-    args = [
-        "preview",
-    ],
-    chdir = package_name(),
-    data = [":build"],
-)
-
-typescript_bin.tsc_test(
-    name = "ts_test",
-    size = "small",
-    args = [
-        "-b",
-    ],
-    chdir = package_name(),
-    data = glob(
-        [
-            "src/**/*.tsx",
-        ],
-    ) + [
-        "package.json",
-        "tsconfig.json",
-    ] + [
-        ":node_modules",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@maven//:org_springdoc_springdoc_openapi_starter_webmvc_ui",
+        "@maven//:org_springframework_boot_spring_boot",
+        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+        "@maven//:org_springframework_boot_spring_boot_loader",
+        "@maven//:org_springframework_boot_spring_boot_starter_web",
     ],
 )
 
-pkg_files(
-    name = "pkg_build",
-    srcs = [
-        ":build",  # produced by vite
-    ],
-    prefix = "/usr/share/nginx/html",  # nginx default folder to serve content
-    strip_prefix = strip_prefix.from_pkg("dist"),  # remove the <package-name>/dist (workshop/case4/dist in this case) folders from the path of the assets
-)
-
-pkg_tar(
-    name = "tar",
-    srcs = [
-        ":pkg_build",
-    ],
-    include_runfiles = True,
-    strip_prefix = ".",
-    tags = [
-        "manual",
-        "no-cache",
-    ],
+tar(
+    name = "layer",
+    srcs = [":app.jar"],
 )
 
 oci_image(
     name = "app_image",
-    base = "@nginx",
-    tars = [":tar"],
+    base = "@openjdk_17",
+    entrypoint = [
+        "java",
+        "-jar",
+        "/{}/app.jar".format(package_name()),  # app.jar is located at /workshop/case3/app.jar because of bazel file layout
+    ],
+    tars = [":layer"],
 )
 
 repo_tags = [

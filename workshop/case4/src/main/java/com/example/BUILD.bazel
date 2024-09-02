@@ -1,7 +1,7 @@
 java_library(
     name = "main",
     srcs = ["Main.java"],
-    visibility = ["//workshop/case3:__subpackages__"],
+    visibility = ["//workshop/case4:__subpackages__"],
     deps = [
         "@maven//:org_springframework_boot_spring_boot",
         "@maven//:org_springframework_boot_spring_boot_autoconfigure",

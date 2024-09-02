@@ -1,88 +1,13 @@
-load("@rules_spring//springboot:springboot.bzl", "springboot")
-load("@contrib_rules_jvm//java:defs.bzl", "java_test_suite", "junit5_deps")
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
-load("@aspect_bazel_lib//lib:tar.bzl", "tar")
+load("//tools:openapi.bzl", "openapi_spring", "openapi_typescript")
 
-java_library(
-    name = "app_libs",
-    resources = glob(["src/main/resources/**"]),
-    exports = [
-        "//workshop/case3/src/main/java/com/example:main",
-        "//workshop/case3/src/main/java/com/example/customer",
-        "//workshop/case3/src/main/java/com/example/hello",
-        "//workshop/case3/src/main/java/com/example/products",
-    ],
-)
-
-springboot(
-    name = "app",
-    boot_app_class = "com.example.Main",
-    boot_launcher_class = "org.springframework.boot.loader.launch.JarLauncher",  # Enable new Spring Boot 3.2 boot loader
-    dupeclassescheck_enable = True,  # Check for duplicate classes in dependencies
-    java_library = ":app_libs",
-    tags = ["app"],
+openapi_spring(
+    name = "openapi_spring",
+    package_name = "com.workshop.case3",
+    src = "api.yaml",
     visibility = ["//visibility:public"],
-    deps = [
-        "@maven//:org_springdoc_springdoc_openapi_starter_webmvc_ui",
-        "@maven//:org_springframework_boot_spring_boot",
-        "@maven//:org_springframework_boot_spring_boot_autoconfigure",
-        "@maven//:org_springframework_boot_spring_boot_loader",
-        "@maven//:org_springframework_boot_spring_boot_starter_web",
-    ],
 )
 
-java_test_suite(
-    name = "tests",
-    size = "small",
-    srcs = glob(["src/test/**/*.java"]),
-    #    jvm_flags = [
-    #        "--add-opens=java.base/java.lang=ALL-UNNAMED",
-    #    ],
-    package_prefixes = [".com."],
-    resources = glob(["src/test/resources/**/*"]),
-    runner = "junit5",
-    #    test_suffixes = [
-    #        "Test.java",
-    #    ],
-    deps = junit5_deps() + [
-        ":app_libs",
-        "@maven//:org_junit_jupiter_junit_jupiter_api",
-        "@maven//:org_springframework_boot_spring_boot_starter_test",
-        "@maven//:org_springframework_boot_spring_boot_test",
-        "@maven//:org_springframework_boot_spring_boot_test_autoconfigure",
-        "@maven//:org_springframework_spring_test",
-    ],
-)
-
-tar(
-    name = "layer",
-    srcs = [":app.jar"],
-)
-
-oci_image(
-    name = "app_image",
-    base = "@openjdk_17",
-    entrypoint = [
-        "java",
-        "-jar",
-        "/{}/app.jar".format(package_name()),  # app.jar is located at /workshop/case3/app.jar because of bazel file layout
-    ],
-    tars = [":layer"],
-)
-
-repo_tags = [
-    "case3:latest",
-]
-
-# Run a local container with:
-# $ bazel run :tarball
-# $ docker run --rm bazel/example:latest
-oci_tarball(
-    name = "tarball",
-    image = ":app_image",
-    repo_tags = repo_tags,
-    tags = [
-        "manual",
-        "no-cache",
-    ],
+openapi_typescript(
+    name = "openapi_typescript",
+    src = "api.yaml",
 )
