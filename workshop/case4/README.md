@@ -11,13 +11,14 @@ easily allow you to figure out which apps are affected by a change (more on this
 ## Things to try out
 
 ### Build the application
-`bazel build :app`
+`bazel build //workshop/case4:app`
 
 ### Start the application
-`bazel run :app` starts the Spring Boot application
+`bazel run //workshop/case4:app` starts the Spring Boot application
+Swagger available at http://localhost:8080/swagger-ui/index.html 
 
 ### Create a Docker image
-`bazel run :tarball` builds an OCI compatible image and loads it into your Docker context.  
+`bazel run //workshop/case4:tarball` builds an OCI compatible image and loads it into your Docker context.  
 Afterwards, you can run the application with `docker run --rm -it -p8080:8080 case4:latest`
 
 ## Additional things to try out
@@ -25,10 +26,9 @@ Afterwards, you can run the application with `docker run --rm -it -p8080:8080 ca
 #### Run the tests
 The controller tests does not depend on all the controllers in the application. 
 If you run: 
-`bazel test ...`
-and then make a change in ProductController.java, only the ContextTest and ProductControllerTest will be re-run. CustomerControllerTest will be cached. 
+`bazel test //workshop/...`
+and then make a change in ProductController.java, only the ContextTest and ProductControllerTest will be re-run. All other tests will be cached. 
 
 #### Add a new module with Spring contollers and tests
-
 There is a test in com.example.shoppingcart. Make it pass by adding a new module with a controller and bazel targets
 Bonus points if you use the openapi specification from `case 3` `"//workshop/case3:openapi_spring"` 
