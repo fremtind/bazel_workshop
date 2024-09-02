@@ -1,11 +1,15 @@
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_js//js:defs.bzl", "js_run_devserver")
+
+# This is a Starlark-wrapper for the bin-target of the vite package.json: https://github.com/vitejs/vite/blob/main/packages/vite/package.json#L9
+# This makes is possible to run the vite binary from Bazel directly with different arguments as seen further down
 load("@npm//workshop/case5:vite/package_json.bzl", vite_bin = "bin")
 load("@npm//workshop/case5:typescript/package_json.bzl", typescript_bin = "bin")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_filegroup", "pkg_files", "strip_prefix")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
+# This is a macro that is used to link up all the dependencies from pnpm-lock for this package, and creates :node_modules/<package-name> targets in Bazel
 npm_link_all_packages(name = "node_modules")
 
 DEPS = [
@@ -85,7 +89,7 @@ pkg_files(
         ":build",  # produced by vite
     ],
     prefix = "/usr/share/nginx/html",  # nginx default folder to serve content
-    strip_prefix = strip_prefix.from_pkg("dist"),  # remove the <package-name>/dist (workshop/case4/dist in this case) folders from the path of the assets
+    strip_prefix = strip_prefix.from_pkg("dist"),  # remove the <package-name>/dist (workshop/case5/dist in this case) folders from the path of the assets
 )
 
 pkg_tar(
