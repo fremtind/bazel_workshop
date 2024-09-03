@@ -3,8 +3,13 @@
 ## Getting started
 - Install Bazelisk: https://bazel.build/install/bazelisk
 - Clone this repository
+- Ensure you have a JDK 21 installed, any should work but Zulu is recommended (See troubleshooting if you have issues)
 - Run `bazel build //workshop/case1:hello` to see if everything is working
 - Check out the workshop cases below 
+
+## Troubleshooting
+- For Mac, openjdk installed through homebrew is missing some libs - try with Zulu JDK `brew install --cask zulu@21`
+- If Bazel picks up the wrong JDK, you can set the JAVA_HOME environment variable to the correct path and run `echo "startup --server_javabase=\"$JAVA_HOME\"" >> $HOME/.bazelrc` to explicitly tell Bazel to use the correct JDK
 
 ## Overview
 This repo contains simple examples to get you started with Bazel.
