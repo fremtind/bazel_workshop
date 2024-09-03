@@ -11,10 +11,20 @@ It also shows how to consume a file produced by another target.
 ```
 bazel build //workshop/case1:hello
 cat bazel-bin/workshop/case1/hello.txt
-
+```
+```
 bazel build //workshop/case1:hello_replaced
 cat bazel-bin/workshop/case1/replaced.txt
 ```
+
+## Things to try out
+
+### Change one of the targets
+Does all or only some of the targets rebuild?
+Try changing different targets, and run `bazel build //workshop/case1:hello_replaced` to see what happens.
+
+### Does the tests fail if you change the `genrule` to produce a file with a different content?
+Try changing a file and run `bazel test //workshop/case1:all`
 
 ## Additional things to try out
 

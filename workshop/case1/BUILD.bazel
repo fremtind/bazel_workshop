@@ -13,6 +13,7 @@ genrule(
     cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@",
 )
 
+# Small test to check if the files were generated correctly
 assert_contains(
     name = "test_hello",
     actual = ":hello",

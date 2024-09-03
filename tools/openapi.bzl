@@ -23,14 +23,11 @@ def openapi_spring(
             "@maven//:com_fasterxml_jackson_core_jackson_databind",
             "@maven//:com_google_code_findbugs_jsr305",
             "@maven//:com_google_code_gson_gson",
-            #            "@maven//:com_squareup_okhttp3_logging_interceptor",
-            #            "@maven//:com_squareup_okhttp3_okhttp",
             "@maven//:io_gsonfire_gson_fire",
             "@maven//:io_swagger_core_v3_swagger_annotations",
             "@maven//:jakarta_annotation_jakarta_annotation_api",
             "@maven//:jakarta_servlet_jakarta_servlet_api",
             "@maven//:jakarta_validation_jakarta_validation_api",
-            #            "@maven//:org_apache_commons_commons_lang3",
             "@maven//:org_openapitools_jackson_databind_nullable",
             "@maven//:org_springframework_spring_context",
             "@maven//:org_springframework_spring_web",
@@ -62,6 +59,7 @@ def openapi_spring(
     )
 
     # genrules cannot output unknown files or whole directories, so this is a way to zip up the result as a single .srcjar instead
+    # which java_library supports consuming as srcs
     native.genrule(
         name = "{}_build_spring_srcs".format(name),
         srcs = ["{}_build_spring".format(name)],
