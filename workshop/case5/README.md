@@ -44,23 +44,25 @@ See more about this in the [rules_js FAQ](https://github.com/aspect-build/rules_
 ## Things to try out
 
 ### Build the application
-`bazel build :build`
+`bazel build //workshop/case5:build`
 
 ### Run application in dev mode
-`bazel run :dev` - note that this does not notice changed files in the workspace, so you have to restart the command to see changes.  
+`bazel run //workshop/case5:dev` - note that this does not notice changed files in the workspace, so you have to restart the command to see changes.  
 To get hot reloading through Bazel you need to use ibazel, see [bazel-watcher](https://github.com/bazelbuild/bazel-watcher).  
-Then you can run `ibazel run :dev` or `npx @bazel/ibazel run :dev` instead.
+Then you can run `ibazel run //workshop/case5:dev` or `npx @bazel/ibazel run //workshop/case5:dev` instead.
 
-Dev mode also works through `pnpm run dev`, which goes outside of Bazel
+Dev mode also works through `cd workshop/case5 && pnpm i && pnpm run dev`, which goes outside of Bazel
 
 ### Create a Docker image
-`bazel run :tarball` builds an OCI compatible image and loads it into your Docker context.  
-Afterwards, you can run the application with `docker run --rm -it -p80:80 case4:latest`
+`bazel run //workshop/case5:tarball` builds an OCI compatible image and loads it into your Docker context.  
+Afterwards, you can run the application with `docker run --rm -it -p80:80 case5:latest`
+http://localhost
 
 ### Inspect the build outputs
-You can run `bazel cquery //workshop/case4:<target> --output=files` to get the files output for a given target.
+You can run `bazel cquery //workshop/case5:<target> --output=files` to get the files output for a given target.
 
-If you run `bazel cquery //workshop/case4:tar --output=files` you will get the tar layer for application code. You can then inspect the tar by running `tar -tvf bazel-bin/workshop/case4/tar.tar`:
+If you run `bazel cquery //workshop/case5:tar --output=files` you will get the tar layer for application code. 
+You can then inspect the tar by running `tar -tvf bazel-bin/workshop/case5/tar.tar`:
 ```shell
 drwxr-xr-x  0 0      0           0  1 jan  2000 usr/
 drwxr-xr-x  0 0      0           0  1 jan  2000 usr/share/
