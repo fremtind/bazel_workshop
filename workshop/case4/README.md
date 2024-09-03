@@ -41,5 +41,5 @@ e.g
 ```
 1. bump spring version to 3.3.2 in MODULE.bazel
 2. run `bazel run @maven//:pin`
-3. run `bazel build //workshop/case4:app` to see that the spring boot app from case
+3. run `bazel run //workshop/case4:app` to see that the spring boot app from case
 ```
