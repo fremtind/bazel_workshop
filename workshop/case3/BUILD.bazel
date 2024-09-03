@@ -5,7 +5,7 @@ openapi_spring(
     name = "openapi_spring",
     package_name = "com.workshop.case3",
     src = "api.yaml",
-    visibility = ["//teams:__subpackages__"],
+    visibility = ["//visibility:public"],
 )
 
 openapi_typescript(
