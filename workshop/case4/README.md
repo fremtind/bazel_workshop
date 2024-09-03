@@ -32,3 +32,14 @@ and then make a change in ProductController.java, only the ContextTest and Produ
 #### Add a new module with Spring contollers and tests
 There is a test in com.example.shoppingcart. Make it pass by adding a new module with a controller and bazel targets
 Bonus points if you use the openapi specification from `case 3` `"//workshop/case3:openapi_spring"` 
+
+#### Updating maven dependencies
+Maven dependencies are resolved using the WORKSPACE file and the maven_install.json file.
+Update the WORKSPACE.bazel file with new versions and run `bazel run @maven//:pin` to update the maven_install.json file.
+
+e.g
+```
+1. bump spring version to 3.3.2 in MODULE.bazel
+2. run `bazel run @maven//:pin`
+3. run `bazel run //workshop/case4:app` to see that the spring boot app from case
+```
