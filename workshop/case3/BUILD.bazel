@@ -1,10 +1,11 @@
+# This loads macros we have created in the tools/openapi.bzl file to make reuse of OpenAPI code generation easier.
 load("//tools:openapi.bzl", "openapi_spring", "openapi_typescript")
 
 openapi_spring(
     name = "openapi_spring",
     package_name = "com.workshop.case3",
     src = "api.yaml",
-    visibility = ["//visibility:public"],
+    visibility = ["//teams:__subpackages__"],
 )
 
 openapi_typescript(
