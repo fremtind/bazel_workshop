@@ -6,5 +6,6 @@
         "../../bazel-bin/workshop/case3/pkg/*"
       ]
     }
-  }
+  },
+  "exclude": ["**/*.test.*", "src/test-setup.ts"]
 }

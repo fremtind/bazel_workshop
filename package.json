@@ -3,7 +3,14 @@
 	"private": true,
 	"version": "1.0.0",
 	"pnpm": {
-		"onlyBuiltDependencies": []
+		"onlyBuiltDependencies": [],
+		"packageExtensions": {
+			"@testing-library/jest-dom@6": {
+				"dependencies": {
+					"vitest": "^1.6.0"
+				}
+			}
+		}
 	},
 	"devDependencies": {
 		"openapi-typescript-codegen": "^0.29.0"
