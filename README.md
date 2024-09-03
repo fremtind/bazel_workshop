@@ -47,5 +47,5 @@ Also used as an example how you can structure your monorepo to leverage Team iso
 ## Other resources
 - [Bazel documentation](https://bazel.build/start) official documentation
 - [Bazel Examples](https://github.com/aspect-build/bazel-examples) from Aspect Dev
-- [Bazel on Slack](https://bazelbuild.slack.com)
+- [Bazel on Slack](https://bazelbuild.slack.com) (You can find us here if you want to chat about anything Bazel related!)
 - [Aspect dev docs](https://docs.aspect.build/) contains a lot of good examples and explanations
