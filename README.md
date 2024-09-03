@@ -52,4 +52,5 @@ Also used as an example how you can structure your monorepo to leverage Team iso
 
 ## Windows 
 Add to .bazelrc
+
 startup --output_user_root=C:/tmp
