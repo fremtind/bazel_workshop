@@ -8,6 +8,7 @@ load("@npm//workshop/case5:typescript/package_json.bzl", typescript_bin = "bin")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_filegroup", "pkg_files", "strip_prefix")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("@fremtind_rules_vitest//vitest:defs.bzl", "vitest_test")
 
 # This is a macro that is used to link up all the dependencies from pnpm-lock for this package, and creates :node_modules/<package-name> targets in Bazel
 npm_link_all_packages(name = "node_modules")
@@ -25,6 +26,9 @@ vite_bin.vite(
     srcs = glob(
         [
             "src/**/*",
+        ],
+        exclude = [
+            "src/**/*.test.*",
         ],
     ) + DEPS,
     args = [
@@ -51,6 +55,9 @@ js_run_devserver(
         [
             "src/**/*",
         ],
+        exclude = [
+            "src/**/*.test.*",
+        ],
     ) + DEPS,
     tool = ":vite_dev",
 )
@@ -62,6 +69,22 @@ vite_bin.vite_binary(
     ],
     chdir = package_name(),
     data = [":build"],
+)
+
+vitest_test(
+    name = "test",
+    size = "small",
+    chdir = package_name(),
+    config = "vitest.config.mjs",
+    data = glob(["src/**/*"]) + [
+        "package.json",
+        "test-setup.ts",
+        "tsconfig.json",
+        "vitest.config.mjs",
+        ":node_modules",
+    ],
+    node_modules = ":node_modules",
+    shard_count = 0,
 )
 
 typescript_bin.tsc_test(

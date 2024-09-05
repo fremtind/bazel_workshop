@@ -13,7 +13,11 @@
     "vite": "^5.2.11"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^15.0.7",
+    "@vitest/coverage-istanbul": "^2.0.5",
+    "jsdom": "^25.0.0",
     "typescript": "^5.5.4",
-    "vitest": "^1.5.3"
+    "vitest": "^1.6.0"
   }
 }
