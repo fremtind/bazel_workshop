@@ -23,6 +23,16 @@ sh_test(
     ],
 )
 
+#sh_test(
+#    name = "try_this_acceptance_test",
+#    size = "small",
+#    srcs = ["hello_world_from_greeter_test.sh"],
+#    args = ["$(location :hello)"],  # Pass the relative location of the :hello target as an argument
+#    data = [
+#        ":hello",
+#    ],
+#)
+
 java_junit5_test(
     name = "greeter-test",
     size = "small",
