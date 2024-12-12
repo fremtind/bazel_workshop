@@ -12,6 +12,6 @@ class Controller {
 
     @GetMapping("/greet")
     fun greet(): String {
-        return greetingService!!.greet("Kotlin")
+        return greetingService!!.greet("Kotlin2")
     }
 }
