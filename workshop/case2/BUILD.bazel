@@ -1,36 +1,14 @@
-load("@contrib_rules_jvm//java:defs.bzl", "java_junit5_test", "junit5_deps")
+# This loads macros we have created in the tools/openapi.bzl file to make reuse of OpenAPI code generation easier.
+load("//tools:openapi.bzl", "openapi_spring", "openapi_typescript")
 
-java_library(
-    name = "greeter-lib",
-    srcs = ["Greeter.java"],
+openapi_spring(
+    name = "openapi_spring",
+    package_name = "com.workshop.case2",
+    src = "api.yaml",
     visibility = ["//visibility:public"],
 )
 
-java_binary(
-    name = "hello",
-    srcs = ["HelloWorld.java"],
-    main_class = "workshop.case2.HelloWorld",
-    deps = [":greeter-lib"],
-)
-
-sh_test(
-    name = "acceptance_test",
-    size = "small",
-    srcs = ["hello_world_test.sh"],
-    args = ["$(location :hello)"],  # Pass the relative location of the :hello target as an argument
-    data = [
-        ":hello",
-    ],
-)
-
-java_junit5_test(
-    name = "greeter-test",
-    size = "small",
-    srcs = ["GreeterTest.java"],
-    test_class = "workshop.case2.GreeterTest",
-    deps = [
-        "//workshop/case2:greeter-lib",
-        "@maven//:org_assertj_assertj_core",
-        "@maven//:org_junit_jupiter_junit_jupiter_api",
-    ] + junit5_deps(),
+openapi_typescript(
+    name = "openapi_typescript",
+    src = "api.yaml",
 )
