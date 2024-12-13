@@ -77,6 +77,11 @@ drwxr-xr-x  0 0      0           0  1 jan  2000 usr/share/nginx/html/assets/
 
 ### Can you include the [greeting-component](../../teams/libs/frontend/greeting-component/package.json) in the app?
 
+### Try removing `":node_modules"` from the `DEPS`-array in the `BUILD.bazel` file and see what happens. 
+When using `":node_modules"` as a dependency you make the target dependent on **all** the packages node modules.
+This means that if you update @types/react, which is only for typechecking, you will rebuild the entire application and run all tests.
+Try adding only specific node module (for instance: `":node_modules/react"`) required to build the `:build` target.
+
 ### Can you transpile the TypeScript to JavaScript before building the app with Vite?
 Check out [rules_swc](https://github.com/aspect-build/rules_swc) for an example on how to transpile TypeScript to JavaScript with Bazel.
 This could be useful if you want to reuse the JavaScript in tests to avoid multiple transpilations.
