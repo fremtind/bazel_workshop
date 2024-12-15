@@ -1,4 +1,4 @@
-# Case 6: CI tooling
+# Case 5: CI tooling
 
 ## Steps to run CI with Bazel
 To be able to run an effective CI pipeline with Bazel, there is a couple of things you want to know how to do.
@@ -28,7 +28,7 @@ bazel query "kind(oci_image, //...)"
 ```
 This can be combined with the list of changed targets to find only the changed Docker images.
 ```shell
-$CHANGED_TARGETS="//examples/case6:app_image //teams/team-1/java-app:app_image"
+$CHANGED_TARGETS="//examples/case5:app_image //teams/team-1/java-app:app_image"
 bazel query "kind(oci_image, set($CHANGED_TARGETS))"
 ```
 
@@ -64,11 +64,11 @@ bazel query "attr(tags, lib, set($CHANGED_TARGETS))"
 You can run bazel-diff locally to see what targets have changed between two commits.
 The script accepts two arguments, the commit hashes to compare.
 It defaults the second argument to HEAD if not provided.
-`./workshop/case6/bazel-diff.sh [oldest_commit_sha] [newest_commit_sha]`
+`./workshop/case5/bazel-diff.sh [oldest_commit_sha] [newest_commit_sha]`
 
 Example:
 ```shell
-./workshop/case6/bazel-diff.sh 234fb81c60890b5e771e151e162bcfef5b9b2a42 6b79fe920a6028ba74581d8888926d84523e2bdd
+./workshop/case5/bazel-diff.sh 234fb81c60890b5e771e151e162bcfef5b9b2a42 6b79fe920a6028ba74581d8888926d84523e2bdd
 ```
 
 ### Commit changes to one of the apps under `/teams/` and see how the CI pipeline reacts

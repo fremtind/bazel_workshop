@@ -28,12 +28,12 @@ genrule(
 ### OPPGAVE 1
 # generer en ny fil replaced.txt som erstatter "World" med "Workshop"
 # hint: cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@"
-genrule(
-    name = "hello_replaced",
-    srcs = [":hello"],
-    outs = ["replaced.txt"],
-    cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@",
-)
+#genrule(
+#    name = "targetnavnet_mitt",
+#    srcs = [":target_label"],
+#    outs = ["outputfil.fil"],
+#    cmd = "kommandoen jeg vil kjøre",
+#)
 
 ### OPPGAVE 2
 # Lag en test som sjekker at filen "hello" inneholder "Hello, World!"
@@ -55,3 +55,4 @@ genrule(
 # Flytt :hello og :world targetsa til den nye pakken
 # Endre referansene til targetsa i denne pakken til å referere til den nye pakken
 # Får du fremdeles testen til å passere?
+# Hint: Feiler bygget? Kan det være at label på targetsa :hello og :world må oppdateres?

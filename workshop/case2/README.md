@@ -1,4 +1,4 @@
-# Case 3: OpenAPI specs and multi-language builds
+# Case 2: OpenAPI specs and multi-language builds
 
 In this case, we will use the OpenAPI specs to generate library code in multiple languages, which we in turn will use in our workshop.
 

@@ -18,11 +18,10 @@ It also contains a CI workflow that shows how to build and test all changed targ
 
 ### Workshop
  - Case 1: [Hello World in Bazel](workshop/case1/README.md)
- - Case 2: [Simple Java application](workshop/case2/README.md)
- - Case 3: [Generate code from OpenApi specifications](workshop/case2/README.md)
- - Case 4: [Spring Boot in Bazel](workshop/case3/README.md)
- - Case 5: [Vite + React frontend in Bazel](workshop/case4/README.md)
- - Case 6: [Bazel in CI / multiple teams](workshop/case6/README.md)
+ - Case 2: [Generate code from OpenApi specifications](workshop/case2/README.md)
+ - Case 3: [Spring Boot in Bazel](workshop/case3/README.md)
+ - Case 4: [Vite + React frontend in Bazel](workshop/case4/README.md)
+ - Case 5: [Bazel in CI / multiple teams](workshop/case5/README.md)
 
 ### Remote caching
 This workshop works with a free online remote cache to speed up builds, called [NativeLink](https://app.nativelink.com/).
