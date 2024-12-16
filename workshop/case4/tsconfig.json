@@ -6,7 +6,7 @@
       "openapi_typescript/*": [
         "../../bazel-bin/workshop/case2/pkg/*"
       ]
-    }
+    },
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "exclude": ["**/*.test.*", "src/test-setup.ts"]
 }
