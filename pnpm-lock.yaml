@@ -146,13 +146,13 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.9)
 
-  workshop/case3: {}
+  workshop/case2: {}
 
-  workshop/case5:
+  workshop/case4:
     dependencies:
       openapi_typescript:
         specifier: workspace:*
-        version: link:../case3
+        version: link:../case2
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -4466,7 +4466,7 @@ snapshots:
 
   '@babel/helper-annotate-as-pure@7.24.7':
     dependencies:
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
 
   '@babel/helper-compilation-targets@7.24.7':
     dependencies:
@@ -4507,14 +4507,14 @@ snapshots:
   '@babel/helper-member-expression-to-functions@7.24.7':
     dependencies:
       '@babel/traverse': 7.24.7
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
 
   '@babel/helper-module-imports@7.24.7':
     dependencies:
       '@babel/traverse': 7.24.7
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
 
@@ -4531,7 +4531,7 @@ snapshots:
 
   '@babel/helper-optimise-call-expression@7.24.7':
     dependencies:
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
 
   '@babel/helper-plugin-utils@7.24.7': {}
 
@@ -4547,14 +4547,14 @@ snapshots:
   '@babel/helper-simple-access@7.24.7':
     dependencies:
       '@babel/traverse': 7.24.7
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
 
   '@babel/helper-skip-transparent-expression-wrappers@7.24.7':
     dependencies:
       '@babel/traverse': 7.24.7
-      '@babel/types': 7.24.7
+      '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
 
@@ -4893,7 +4893,7 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4
+      debug: 4.3.6
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.1
@@ -4911,7 +4911,7 @@ snapshots:
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.3.4
+      debug: 4.3.6
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -5493,7 +5493,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 7.13.1(typescript@5.2.2)
       '@typescript-eslint/utils': 7.13.1(eslint@8.57.0)(typescript@5.2.2)
-      debug: 4.3.4
+      debug: 4.3.6
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.2.2)
     optionalDependencies:
@@ -5523,7 +5523,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.13.1
       '@typescript-eslint/visitor-keys': 7.13.1
-      debug: 4.3.4
+      debug: 4.3.6
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -7239,7 +7239,7 @@ snapshots:
   istanbul-lib-instrument@6.0.3:
     dependencies:
       '@babel/core': 7.24.7
-      '@babel/parser': 7.24.7
+      '@babel/parser': 7.25.6
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
       semver: 7.6.2

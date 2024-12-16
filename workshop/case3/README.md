@@ -1,21 +1,49 @@
-# Case 3: OpenAPI specs and multi-language builds
+# Case 3: Bazel and Spring Boot
 
-In this case, we will use the OpenAPI specs to generate library code in multiple languages, which we in turn will use in our workshop.
+Spring Boot executable jars need a different layout than regular Java jars.  
+Luckily, we can use [Salesforce rules_spring](https://github.com/salesforce/rules_spring) to create Spring Boot compatible jars in Bazel
 
-## Things to try
+We have also split up the application into small modules which can be built separately. This allows for faster builds and better caching because you dont need to rebuild everything. 
+Adding the small modules as dependencies to the tests also allows for Bazel to figure out which tests should be executed again when a file changes.
+This is functionality which comes in very handy in a large codebase or monorepo with many apps, because it keeps build times low and it will 
+easily allow you to figure out which apps are affected by a change (more on this in [case 5](../case5/README.md))
 
-### Figure out which cases depends on the `openapi_spring` target
-In the previous case there is an example of querying reverse dependencies - can you figure out which case depends on the `openapi_spring` target?
+## Things to try out
 
-### Can you locate the generated code in the `bazel-bin` directory?
+### Build the application
+`bazel build //workshop/case3:app`
 
-### What happens if you try to change the visibility of the `openapi_spring` target to for example `//teams:__subpackages__`?
-Visibility of a target is a key feature in Bazel to control who can depend on a target. Try changing the visibility of the `openapi_spring` target and then run `bazel build //workshop/...` to rebuild all workshop cases
+### Start the application
+`bazel run //workshop/case3:app` starts the Spring Boot application
+Find the Swagger docs available at http://localhost:8080/swagger-ui/index.html
 
-## Additional things to try
+### Change openapi spec
+Add an property to the `HelloWorldResponse` in the api.yaml file in case 2. Rebuild targets is case2 package.
+Rebuild and rerun the application in case3. Do you see the changes reflected in the Swagger docs?
 
-### What happens when you rename the `hello` property in `HelloWorldResponse`?
-Try running `bazel test --build_tests_only //workshop/...` after removing the property
+### Create a Docker image
+`bazel run //workshop/case3:tarball` builds an OCI compatible image and loads it into your Docker context.  
+Afterwards, you can run the application with `docker run --rm -it -p8080:8080 case3:latest`
 
-## Gotchas with this approach
-While this works as expected, if you only use pnpm for frontend-builds (not Bazel), you have to manually rebuild the OpenAPI target in Bazel to get updates to the package. 
+## Additional things to try out
+
+#### Run the tests
+The controller tests does not depend on all the controllers in the application. 
+If you run: 
+`bazel test //workshop/...`
+and then make a change in ProductController.java, only the ContextTest and ProductControllerTest will be re-run. All other tests will be cached. 
+
+#### Add a new module with Spring contollers and tests
+There is a test in com.example.shoppingcart. Make it pass by adding a new module with a controller and bazel targets
+Bonus points if you use the openapi specification from `case 2` `"//workshop/case2:openapi_spring"` 
+
+#### Updating maven dependencies
+Maven dependencies are resolved using the WORKSPACE file and the maven_install.json file.
+Update the WORKSPACE.bazel file with new versions and run `bazel run @maven//:pin` to update the maven_install.json file.
+
+e.g
+```
+1. bump spring version to 3.3.2 in MODULE.bazel
+2. run `bazel run @maven//:pin`
+3. run `bazel run //workshop/case3:app` to see that the spring boot app from case
+```

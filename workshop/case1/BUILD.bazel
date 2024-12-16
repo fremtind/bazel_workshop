@@ -1,27 +1,58 @@
 load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains")
 
+# Generere en fil som inneholder "Hello"
 genrule(
     name = "hello",
     outs = ["hello.txt"],
-    cmd = "echo 'Hello, World!' > $@",
+    cmd = "echo 'Hello' > $@",
 )
 
+# Generere en fil som inneholder "World"
 genrule(
-    name = "hello_replaced",
-    srcs = [":hello"],
-    outs = ["replaced.txt"],
-    cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@",
+    name = "world",
+    outs = ["world.txt"],
+    cmd = "echo 'World!' > $@",
 )
 
-# Small test to check if the files were generated correctly
-assert_contains(
-    name = "test_hello",
-    actual = ":hello",
-    expected = "Hello, World!",
+# Konkatener filene "hello" og "world" til en ny fil
+genrule(
+    name = "hello_world",
+    srcs = [
+        ":hello",
+        ":world",
+    ],
+    outs = ["hello-world.txt"],
+    cmd = "cat $(locations :hello) $(location :world) > $@",
 )
 
-assert_contains(
-    name = "test_replaced",
-    actual = ":hello_replaced",
-    expected = "Hello, Workshop!",
-)
+### OPPGAVE 1
+# generer en ny fil replaced.txt som erstatter "World" med "Workshop"
+# hint: cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@"
+#genrule(
+#    name = "targetnavnet_mitt",
+#    srcs = [":target_label"],
+#    outs = ["outputfil.fil"],
+#    cmd = "kommandoen jeg vil kjøre",
+#)
+
+### OPPGAVE 2
+# Lag en test som sjekker at filen "hello" inneholder "Hello, World!"
+# Få testen til å passere
+
+# Da må du bruke regelen assert_contains som trenger disse parametrene:
+# name: navnet på testtarget (som du bestemmer)
+# actual: targetet som inneholder den faktiske teksten
+# expected: teksten som skal sjekkes mot
+
+#assert_contains(
+#    name = "mitt_test_target",
+#    actual = ":referanse_til_target",
+#    expected = "Forventet tekst",
+#)
+
+### OPPGAVE 3
+# Lag en ny pakke i workshop folderen som heter min-pakke, eller noe annet
+# Flytt :hello og :world targetsa til den nye pakken
+# Endre referansene til targetsa i denne pakken til å referere til den nye pakken
+# Får du fremdeles testen til å passere?
+# Hint: Feiler bygget? Kan det være at label på targetsa :hello og :world må oppdateres?
