@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
+    "lib": ["esnext", "dom"],
     "paths": {
       "openapi_typescript/*": [
         "../../bazel-bin/workshop/case2/pkg/*"
