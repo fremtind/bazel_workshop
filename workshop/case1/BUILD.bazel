@@ -27,7 +27,7 @@ genrule(
 
 ### OPPGAVE 1
 # generer en ny fil replaced.txt som erstatter "World" med "Workshop"
-# hint: cmd = "cat '$(location :hello)' | sed 's/World/Workshop/' > $@"
+# hint: cmd = "cat '$(location :hello_world)' | sed 's/World/Workshop/' > $@"
 #genrule(
 #    name = "targetnavnet_mitt",
 #    srcs = [":target_label"],
