@@ -18,7 +18,7 @@ easily allow you to figure out which apps are affected by a change (more on this
 Find the Swagger docs available at http://localhost:8080/swagger-ui/index.html
 
 ### Change openapi spec
-Add an property to the `HelloWorldResponse` in the api.yaml file in case 2. Rebuild targets is case2 package.
+Add an property to the `HelloWorldResponse` in the api.yaml file in case 2.
 Rebuild and rerun the application in case3. Do you see the changes reflected in the Swagger docs?
 
 ### Create a Docker image
